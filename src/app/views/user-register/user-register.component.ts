@@ -73,22 +73,33 @@ export class UserRegisterComponent implements OnInit {
 
     if (this.isUpdate) {
       this.userService.update(this.userForm.value)
-        .subscribe(() => {
+        .subscribe((data) => {
           this.spinner.hide();
-          this.toastr.success('Funcionário atualizado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+
+          if(!data.errors){
+            this.toastr.success('Funcionário atualizado com sucesso.', 'Sucesso');
+            this.router.navigate(['/user/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
         }, err => {
           this.spinner.hide();
-          this.toastr.error('Problema ao atualizar o funcionário.' + err.error.msg, 'Erro: ');
+          this.toastr.error('Problema ao atualizar o funcionário.' + err.error.message, 'Erro: ');
         });
     } else {
       let formValue = this.userForm.value;
       delete formValue._id;
       this.userService.register(formValue)
-        .subscribe(() => {
+        .subscribe((data) => {
           this.spinner.hide();
-          this.toastr.success('Funcionário cadastrado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+          
+          if(!data.errors){
+            this.toastr.success('Funcionário cadastrado com sucesso.', 'Sucesso');
+            this.router.navigate(['/user/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
+
         }, err => {
           this.spinner.hide();
           this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');

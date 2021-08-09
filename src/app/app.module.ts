@@ -55,6 +55,7 @@ import { ClientRegisterModule } from './views/client-register/client-register.mo
 import { InventaryListModule } from './views/inventary-list/inventary-list.module';
 import { ProcvModule } from './views/procv/procv.module';
 import { TokenInterceptor } from './interceptor/token.interceptor';
+import { ModalsModule } from './modals/modals.module';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -85,7 +86,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ClientListModule,
     ClientRegisterModule,
     InventaryListModule,
-    ProcvModule
+    ProcvModule,
+    ModalsModule
   ],
   declarations: [
     AppComponent,
@@ -93,7 +95,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     P404Component,
     P500Component,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   
   providers: [
