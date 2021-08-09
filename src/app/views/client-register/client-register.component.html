@@ -1,0 +1,104 @@
+<div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <strong>Cliente</strong>
+        <small>{{isUpdate ? 'Atualizar' : 'Cadastrar'}}</small>
+      </div>
+      <div class="card-body">
+        <form class="user" [formGroup]="clientForm">
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="inline-radios">Tipo do cliente</label>
+                <div class="col-md-9 col-form-label">
+                  <div class="form-check form-check-inline mr-1" id="inline-radios">
+                    <input [value]="true" formControlName="isHeadQuarter" class="form-check-input" type="radio" name="isHeadQuarter" id="inlineRadio1" value="option1">
+                    <label class="form-check-label" for="inlineRadio1">Matriz</label>
+                  </div>
+                  <div class="form-check form-check-inline mr-1">
+                    <input [value]="false" formControlName="isHeadQuarter" class="form-check-input" type="radio" name="isHeadQuarter" id="inlineRadio2" value="option2">
+                    <label class="form-check-label" for="inlineRadio2">Filial</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row" *ngIf="!clientForm.value.isHeadQuarter">
+                <label class="col-md-3 col-form-label" for="select2">Selecione a Matriz</label>
+                <div class="col-md-9">
+                  <select id="select2" formControlName="idHeadQuarter" name="select2" class="form-control">
+                    <option [ngValue]="null" disabled>Selecione</option>
+                    <option *ngFor="let headQuarter of headQuarters" [ngValue]="headQuarter.id">{{headQuarter.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                  <label for="company">Nome da Empresa</label>
+                  <input  placeholder="Nome da Empresa" class="form-control" formControlName="name" name="fullname" required>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group col-sm-6">
+                      <label for="vat">CPF/CNPJ <span></span>
+                      </label> 
+                      <input  placeholder="Número" class="form-control" formControlName="document" name="cpf" mask="CPF_CNPJ">
+                  </div>
+                  <div class="form-group col-sm-6">
+                      <label for="vat">Email Responsável<span></span>
+                      </label> 
+                      <input type="email" placeholder="Email Responsável" class="form-control" formControlName="email" name="Email">
+                  </div>
+              </div>
+
+              <div class="row" formArrayName="phones">
+                  <div class="form-group col-sm-6">
+                      <label for="city">WhatsApp</label>
+                      <input  type="tel" mask="(00) 00009-0000" class="form-control" placeholder="WhatsApp" formControlName="whatsapp"
+                      name="main">                    
+                  </div>
+                  <div class="form-group col-sm-6">
+                      <label for="postal-code">Celular</label>
+                      <input  type="tel" mask="(00) 00009-0000" class="form-control" placeholder="Celular" formControlName="phone"
+                      name="main">                    
+                  </div>
+              </div>
+
+              <div formArrayName="address">
+                  <div class="form-group row col-sm-6">
+                      <label for="street">CEP</label>
+                      <input  type="zip" mask="00000-000" class="form-control" (change)="changeFindCEP($event)" placeholder="CEP" formControlName="zip" name="zip">
+                  </div>
+
+                  <div class="row">
+                      <div class="form-group col-sm-5">
+                          <label for="street">Rua</label>
+                          <input type="text" formControlName="street" class="form-control" id="street" placeholder="Digite o nome da rua">
+                      </div>
+                      <div class="form-group col-sm-3">
+                        <label for="street">Nº</label>
+                        <input type="text" formControlName="number" class="form-control" id="number" placeholder="Número">
+                    </div>
+                      <div class="form-group col-sm-4">
+                          <label for="street">Complemento</label>
+                          <input type="text" formControlName="complement" class="form-control" id="street" placeholder="Exemplo: casa, apt 65">
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-group col-sm-8">
+                        <label for="city">Cidade</label>
+                        <input type="text" formControlName="city" class="form-control" id="city" placeholder="Digite a cidade">
+                      </div>
+                      <div class="form-group col-sm-4">
+                        <label for="postal-code">Estado</label>
+                        <input type="text" formControlName="state" class="form-control" id="postal-code" placeholder="Digite o Estado">
+                      </div>
+                  </div>
+             </div>
+              <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                  <button type="button" class="btn btn-block btn-outline-success">Salvar</button>
+              </div>
+              
+          </form>
+
+      </div>
+    </div>
+  </div><!--/.col-->
