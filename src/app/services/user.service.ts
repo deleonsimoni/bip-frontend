@@ -22,7 +22,7 @@ export class UserService {
   }
 
   getAll(){
-    return this.http.get<any>(`${environment.urlBIP}/user/register`);
+    return this.http.get<any>(`${environment.urlBIP}/user`);
   }
 
   getById(id){
