@@ -14,6 +14,7 @@
                 <th>Ações</th>
               </tr>
             </thead>
+            
             <tbody>
                 <tr *ngFor="let user of users" >
                     <td>{{ user.cpf | mask: '000.000.000-00'}}</td>

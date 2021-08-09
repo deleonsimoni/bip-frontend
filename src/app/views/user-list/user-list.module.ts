@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -13,8 +14,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
   imports: [
     CommonModule,
     NgxMaskModule.forRoot(),
-    ModalModule.forRoot()
-
+    ModalModule.forRoot(),
+    RouterModule
 
   ]
 })
