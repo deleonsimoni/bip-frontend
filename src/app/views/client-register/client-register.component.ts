@@ -80,18 +80,34 @@ export class ClientRegisterComponent implements OnInit {
 
     if (this.isUpdate) {
       this.clientService.update(this.clientForm.value)
-        .subscribe(() => {
-          this.toastr.success('cliente atualizado com sucesso.', 'Sucesso');
-          this.router.navigate(['/client/list']);
+        .subscribe((data) => {
+          this.spinner.hide();
+          if(!data.errors){
+            this.toastr.success('Cliente atualizado com sucesso.', 'Sucesso');
+            this.router.navigate(['/client/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
         }, err => {
-          this.toastr.error('Problema ao atualizar o cliente.' + err.error.msg, 'Erro: ');
+          this.spinner.hide();
+          this.toastr.error('Problema ao atualizar o Cliente.' + err.error.message, 'Erro: ');
         });
     } else {
-      this.clientService.register(this.clientForm.value)
-        .subscribe(() => {
-          this.toastr.success('cliente cadastrado com sucesso.', 'Sucesso');
-          this.router.navigate(['/client/list']);
+      let formValue = this.clientForm.value;
+      delete formValue._id;
+      this.clientService.register(formValue)
+        .subscribe((data) => {
+          this.spinner.hide();
+          
+          if(!data.errors){
+            this.toastr.success('Cliente cadastrado com sucesso.', 'Sucesso');
+            this.router.navigate(['/client/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
+
         }, err => {
+          this.spinner.hide();
           this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
         });
     }
