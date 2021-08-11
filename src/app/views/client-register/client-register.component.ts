@@ -43,7 +43,6 @@ export class ClientRegisterComponent implements OnInit {
       email: ['', [Validators.email]],
       document: [''],
       userTypeAccess:[''],
-      numberAddress: ['', [Validators.required]],
       complementAddress: [''],
       phones: this.fb.group({
         phone: [''],
