@@ -22,7 +22,7 @@ export class ClientService {
   }
 
   getAll(){
-    return this.http.get<any>(`${environment.urlBIP}/client/register`);
+    return this.http.get<any>(`${environment.urlBIP}/client`);
   }
 
   getById(id){

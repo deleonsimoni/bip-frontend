@@ -31,6 +31,7 @@ export class ProcvComponent implements OnInit {
     let filelist;
     let fileReaderClient = new FileReader();    
     let fileReaderBip = new FileReader();    
+    let contagemTotal = 0;
 
     this.spinner.show();
       try {
@@ -82,7 +83,73 @@ export class ProcvComponent implements OnInit {
             this.toastr.success('Seu arquivo está sendo baixado.', 'Sucesso');
 
 
+            for (let index = 0; index < rowsClient.length; index++) {
 
+              if(this.acabou){
+                  break;
+              }
+    
+              if(index == 0){
+                  rowsClient[index][6] = 'Contabilizados';
+                  rowsClient[index][7] = 'Diferença';
+                  continue;
+              } if (index == 1){
+                  continue;
+              } else {
+    
+                  let achei = false;
+                  let contabilizacaoRepetida = 0;
+    
+                  for (let jotex = 0; jotex < rowsBip.length; jotex++) {    
+    
+                      if(jotex == 0){
+                          continue;
+                      } else {
+                          if(!rowsClient[index][3]){
+                            this.acabou = true;
+                              break;
+                          }
+                          if(rowsBip[jotex][0] == rowsClient[index][3].trim() || rowsBip[jotex][0] == rowsClient[index][0].trim()){
+                              
+                              contagemTotal += rowsBip[jotex][2];
+                              contabilizacaoRepetida += rowsBip[jotex][2];
+                              rowsClient[index][6] = contabilizacaoRepetida;
+                              if(rowsClient[index][5] >= 0){
+                                  rowsClient[index][7] = contabilizacaoRepetida - rowsClient[index][5];
+                              } else {
+                                  rowsClient[index][7] = rowsClient[index][5] + contabilizacaoRepetida;
+                              }
+                              achei = true;
+                          
+                              //break;
+                          }
+                      }
+                  }
+    
+                  if(!achei){
+                      rowsClient[index][6] = 0;
+                      rowsClient[index][7] = rowsClient[index][5];
+                  }
+              }
+          }
+
+          rowsClient[1][6] = contagemTotal;
+
+          workbook = XLSX.utils.book_new();
+          workbook.Props = {
+              Title: "Resultado Inventário",
+              Subject: "BIP",
+              Author: "BIP",
+              CreatedDate: new Date()
+          };
+
+          workbook.SheetNames.push("Averiguacao");
+         // workbook.Sheets["Averiguacao"] = XLSX.utils.aoa_to_sheet(rowsClient);
+          var wbout = XLSX.write(workbook, {bookType:'xlsx', bookSST:false ,  type: 'binary'});
+
+          const blob = new Blob([wbout], { type: 'application/octet-stream' });
+          const url= window.URL.createObjectURL(blob);
+          window.open(url);
 
         }
       }
