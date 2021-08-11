@@ -5,7 +5,7 @@
         <small>{{isUpdate ? 'Atualizar' : 'Cadastrar'}}</small>
       </div>
       <div class="card-body">
-        <form class="user" [formGroup]="clientForm">
+        <form class="user" [formGroup]="clientForm" (ngSubmit)="register()">
 
             <div class="form-group row">
                 <label class="col-md-3 col-form-label" for="inline-radios">Tipo do cliente</label>
