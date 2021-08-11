@@ -63,7 +63,7 @@ export class ProcvComponent implements OnInit {
             });
             
             fileReaderBip.readAsArrayBuffer(fileBip);     
-            fileReaderBip.onload = (e) => {    
+            fileReaderBip.onload = (e) => {  
             arrayBuffer = fileReaderBip.result;    
             data = new Uint8Array(arrayBuffer);    
             arr = new Array();    
@@ -78,7 +78,9 @@ export class ProcvComponent implements OnInit {
               header: 1, // Generate an array of arrays ("2D Array")
             });
 
-            
+            this.spinner.hide();
+            this.toastr.success('Seu arquivo está sendo baixado.', 'Sucesso');
+
 
 
 

@@ -30,6 +30,6 @@ export class ClientService {
   }
 
   getAllHeadQuarters(){
-    return this.http.get<any>(`${environment.urlBIP}/client/`);
+    return this.http.get<any>(`${environment.urlBIP}/client/hqs`);
   }
 }
