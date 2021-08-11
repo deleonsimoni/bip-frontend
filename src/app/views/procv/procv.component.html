@@ -6,19 +6,20 @@
         </div>
         <div class="card-body">
                   
-            <h1 class="center">Tira Teima</h1>
+            <h5>Neste menu você consegue fazer a conciliação de arquivos entre os enviados pelo cliente e contabilizados em seu inventário</h5>
             <p>
-            Excel Cliente <br/>
-            <input type="file" id="excelCliente" name="excelCliente" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                Arquivo do cliente <br/>
+                <input type="file" id="excelCliente" name="excelCliente" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
             </p>
+
             <p>
-            Excel Bipado<br/>
-            <input type="file" id="excelBipado" name="excelBipado" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                Arquivo do inventário<br/>
+                <input type="file" id="excelBipado" name="excelBipado" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
             </p>
             <hr>
         
             <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                <button (click)="processarv2()" class="btn btn-block btn-outline-success">Processar</button>
+                <button (click)="processar()" class="btn btn-block btn-outline-success">Processar</button>
             </div>
 
         </div>

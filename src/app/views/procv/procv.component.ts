@@ -4,6 +4,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UtilService } from '../../services/util.service';
 import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';  
+
 @Component({
   selector: 'app-procv',
   templateUrl: './procv.component.html',
@@ -23,7 +25,8 @@ export class ProcvComponent implements OnInit {
   ngOnInit(): void {
   }    
 
-  processarv2() {
+  processar() {
+    this.spinner.show();
 
     let fileCliente = (<HTMLInputElement>document.getElementById('excelCliente')).files[0];
     let fileBip = (<HTMLInputElement>document.getElementById('excelBipado')).files[0];
@@ -33,7 +36,6 @@ export class ProcvComponent implements OnInit {
     let fileReaderBip = new FileReader();    
     let contagemTotal = 0;
 
-    this.spinner.show();
       try {
         if(!fileCliente){
           this.spinner.hide();
@@ -109,7 +111,7 @@ export class ProcvComponent implements OnInit {
                             this.acabou = true;
                               break;
                           }
-                          if(rowsBip[jotex][0] == rowsClient[index][3].trim() || rowsBip[jotex][0] == rowsClient[index][0].trim()){
+                          if(rowsBip[jotex][0] == rowsClient[index][3] || rowsBip[jotex][0] == rowsClient[index][0]){
                               
                               contagemTotal += rowsBip[jotex][2];
                               contabilizacaoRepetida += rowsBip[jotex][2];
@@ -145,12 +147,15 @@ export class ProcvComponent implements OnInit {
 
           workbook.SheetNames.push("Averiguacao");
           //workbook.Sheets["Averiguacao"] = XLSX.utils.aoa_to_sheet(rowsClient);
-          var wbout = XLSX.write(workbook, {bookType:'xlsx', bookSST:false ,  type: 'binary'});
 
-          const blob = new Blob([wbout], { type: 'application/octet-stream' });
-          const url= window.URL.createObjectURL(blob);
-          window.open(url);
+          const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowsClient);
+          const wb: XLSX.WorkBook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Averiguacao');
+      
+          XLSX.writeFile(wb, 'bip_export_' + new  Date().getTime() + '.xlsx');
 
+          this.spinner.hide();
+          this.toastr.success('Se arquivo está sendo baixado.', 'Sucesso');
         }
       }
 
@@ -162,6 +167,5 @@ export class ProcvComponent implements OnInit {
 
   }
   
-
   
 }
