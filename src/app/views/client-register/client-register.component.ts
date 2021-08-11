@@ -74,7 +74,7 @@ export class ClientRegisterComponent implements OnInit {
 
   register() {
 
-    if (this.clientForm.invalid) return;
+    //if (this.clientForm.invalid) return;
 
     this.spinner.show();
 

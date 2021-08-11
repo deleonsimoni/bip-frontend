@@ -144,7 +144,7 @@ export class ProcvComponent implements OnInit {
           };
 
           workbook.SheetNames.push("Averiguacao");
-         // workbook.Sheets["Averiguacao"] = XLSX.utils.aoa_to_sheet(rowsClient);
+          //workbook.Sheets["Averiguacao"] = XLSX.utils.aoa_to_sheet(rowsClient);
           var wbout = XLSX.write(workbook, {bookType:'xlsx', bookSST:false ,  type: 'binary'});
 
           const blob = new Blob([wbout], { type: 'application/octet-stream' });
