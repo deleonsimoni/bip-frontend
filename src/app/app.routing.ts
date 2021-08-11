@@ -88,14 +88,14 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'clients/register',
+        path: 'client/register',
         component: ClientRegisterComponent,
         data: {
           title: 'Gerir Cliente'
         }
       },
       {
-        path: 'clients/list',
+        path: 'client/list',
         component: ClientListComponent,
         data: {
           title: 'Listar Cliente'

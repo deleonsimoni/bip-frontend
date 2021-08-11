@@ -108,7 +108,9 @@ export class UserRegisterComponent implements OnInit {
   }
 
 
-
+  voltar(){
+    this.router.navigate(['/user/list']);
+  }
 
 
   async changeFindCEP(cep) {

@@ -38,17 +38,17 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Clientes',
-    url: '/clients',
+    url: '/client',
     icon: 'cil-dollar',
     children: [
       {
         name: 'Listar',
-        url: '/clients/list',
+        url: '/client/list',
         icon: 'cil-dollar'
       },
       {
         name: 'Cadastrar',
-        url: '/clients/register',
+        url: '/client/register',
         icon: 'cil-dollar'
       }
     ]

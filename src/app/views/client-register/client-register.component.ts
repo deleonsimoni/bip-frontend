@@ -68,6 +68,9 @@ export class ClientRegisterComponent implements OnInit {
       );
     }
 
+    this.listHeadQuarters();
+
+
   }
 
   register() {
@@ -79,16 +82,16 @@ export class ClientRegisterComponent implements OnInit {
     if (this.isUpdate) {
       this.clientService.update(this.clientForm.value)
         .subscribe(() => {
-          this.toastr.success('Funcionário atualizado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+          this.toastr.success('cliente atualizado com sucesso.', 'Sucesso');
+          this.router.navigate(['/client/list']);
         }, err => {
-          this.toastr.error('Problema ao atualizar o funcionário.' + err.error.msg, 'Erro: ');
+          this.toastr.error('Problema ao atualizar o cliente.' + err.error.msg, 'Erro: ');
         });
     } else {
       this.clientService.register(this.clientForm.value)
         .subscribe(() => {
-          this.toastr.success('Funcionário cadastrado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+          this.toastr.success('cliente cadastrado com sucesso.', 'Sucesso');
+          this.router.navigate(['/client/list']);
         }, err => {
           this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
         });
@@ -121,6 +124,23 @@ export class ClientRegisterComponent implements OnInit {
           },
         });
       });
+  }
+
+  listHeadQuarters(){
+    this.clientService.getAllHeadQuarters() 
+    .subscribe((data) => {
+
+    this.spinner.hide();
+    this.headQuarters = data;
+    
+    }, err => {
+      this.spinner.hide();
+      this.toastr.error('Problema ao listar Matrizes.' + err.error.message, 'Erro: ');
+    });
+  }
+
+  voltar(){
+    this.router.navigate(['/client/list']);
   }
 
 
