@@ -10,11 +10,11 @@ export class ClientService {
   constructor(private http: HttpClient,) { }
 
   register(client: any) {
-    return this.http.post<any>(`${environment.urlBIP}/client/register`, client);
+    return this.http.post<any>(`${environment.urlBIP}/client`, client);
   }
 
-  update(client: any) {
-    return this.http.put<any>(`${environment.urlBIP}/client/register`, client);
+  update(id, client: any) {
+    return this.http.put<any>(`${environment.urlBIP}/client/${id}`, client);
   }
 
   delete(id) {
@@ -22,7 +22,7 @@ export class ClientService {
   }
 
   getAll(){
-    return this.http.get<any>(`${environment.urlBIP}/client/register`);
+    return this.http.get<any>(`${environment.urlBIP}/client`);
   }
 
   getById(id){
@@ -30,6 +30,6 @@ export class ClientService {
   }
 
   getAllHeadQuarters(){
-    return this.http.get<any>(`${environment.urlBIP}/client/`);
+    return this.http.get<any>(`${environment.urlBIP}/client/hqs`);
   }
 }

@@ -9,7 +9,9 @@ import { ClientRegisterComponent } from './views/client-register/client-register
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { HomeComponent } from './views/home/home.component';
+import { InventaryDashboardComponent } from './views/inventary-dashboard/inventary-dashboard.component';
 import { InventaryListComponent } from './views/inventary-list/inventary-list.component';
+import { InventaryRegisterComponent } from './views/inventary-register/inventary-register.component';
 import { LoginComponent } from './views/login/login.component';
 import { ProcvComponent } from './views/procv/procv.component';
 import { RegisterComponent } from './views/register/register.component';
@@ -88,14 +90,14 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'clients/register',
+        path: 'client/register',
         component: ClientRegisterComponent,
         data: {
           title: 'Gerir Cliente'
         }
       },
       {
-        path: 'clients/list',
+        path: 'client/list',
         component: ClientListComponent,
         data: {
           title: 'Listar Cliente'
@@ -109,10 +111,24 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'inventary',
+        path: 'inventary/list',
         component: InventaryListComponent,
         data: {
-          title: 'Gerenciar'
+          title: 'Listar Inventário'
+        }
+      },
+      {
+        path: 'inventary/register',
+        component: InventaryRegisterComponent,
+        data: {
+          title: 'Manter Inventário'
+        }
+      },
+      {
+        path: 'inventary/dashboard',
+        component: InventaryDashboardComponent,
+        data: {
+          title: 'Dashboard Inventário'
         }
       },
       {

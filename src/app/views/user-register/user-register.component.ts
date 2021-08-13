@@ -36,10 +36,14 @@ export class UserRegisterComponent implements OnInit {
     this.userForm = this.fb.group({
       name: ['', [Validators.required]],
       _id: [''],
-      email: ['', [Validators.email]],
-      cpf: ['', [CustomValidator.isValidCpf]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+      ]],
+      cpf: ['', [Validators.required, CustomValidator.isValidCpf]],
       userTypeAccess:[''],
       complementAddress: [''],
+      price: [''],
       phones: this.fb.group({
         phone: [''],
         whatsapp: [''],
@@ -72,7 +76,7 @@ export class UserRegisterComponent implements OnInit {
     this.spinner.show();
 
     if (this.isUpdate) {
-      this.userService.update(this.userForm.value)
+      this.userService.update(this.userForm.value._id, this.userForm.value)
         .subscribe((data) => {
           this.spinner.hide();
 
@@ -84,7 +88,13 @@ export class UserRegisterComponent implements OnInit {
           }
         }, err => {
           this.spinner.hide();
-          this.toastr.error('Problema ao atualizar o funcionário.' + err.error.message, 'Erro: ');
+
+          if(err && err.error && err.error.keyValue && err.error.keyValue.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
+
         });
     } else {
       let formValue = this.userForm.value;
@@ -102,13 +112,21 @@ export class UserRegisterComponent implements OnInit {
 
         }, err => {
           this.spinner.hide();
-          this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+
+          if(err && err.error && err.error.errors && err.error.errors.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
+          
         });
     }
   }
 
 
-
+  voltar(){
+    this.router.navigate(['/user/list']);
+  }
 
 
   async changeFindCEP(cep) {

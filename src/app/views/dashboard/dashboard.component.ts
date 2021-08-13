@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
+
+
+  countEmployees = [];
+  countClients = [];
 
   radioModel: string = 'Month';
 
@@ -377,6 +385,16 @@ export class DashboardComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
+  constructor(
+   
+    protected router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+    private dashboarsService: DashboardService,
+  ) {
+
+   }
+
   ngOnInit(): void {
     // generate random values for mainChart
     for (let i = 0; i <= this.mainChartElements; i++) {
@@ -384,5 +402,39 @@ export class DashboardComponent implements OnInit {
       this.mainChartData2.push(this.random(80, 100));
       this.mainChartData3.push(65);
     }
+    
+    this.getCountClients();
+    this.getCountEmployees();
+
   }
+
+  getCountClients(){
+
+    this.dashboarsService.countClients()
+        .subscribe((data) => {
+          this.spinner.hide();
+          this.countClients = data.length || 0;
+        }, err => {
+          this.spinner.hide();
+          this.toastr.error('Problema ao buscar funcionários. ', 'Erro: ');
+          
+        });
+
+
+  }
+
+  getCountEmployees(){
+    this.dashboarsService.countEmployees()
+        .subscribe((data) => {
+          this.spinner.hide();
+          this.countEmployees = data.length || 0;
+        }, err => {
+          this.spinner.hide();
+          this.toastr.error('Problema ao buscar funcionários. ', 'Erro: ');
+          
+        });
+  }
+
+
+
 }

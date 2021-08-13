@@ -16,8 +16,7 @@ export class ClientRegisterComponent implements OnInit {
 
   clientForm: FormGroup;
   isUpdate = null;
-  isMAtriz = true;
-  headQuarters = [];
+  headQuartersList = [];
 
   constructor(
     private fb: FormBuilder,
@@ -38,12 +37,13 @@ export class ClientRegisterComponent implements OnInit {
     this.clientForm = this.fb.group({
       name: ['', [Validators.required]],
       isHeadQuarter: [true],
-      idHeadQuarter: [true],
+      headquarters: [null],
       _id: [''],
-      email: ['', [Validators.email]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       document: [''],
       userTypeAccess:[''],
-      numberAddress: ['', [Validators.required]],
       complementAddress: [''],
       phones: this.fb.group({
         phone: [''],
@@ -63,34 +63,71 @@ export class ClientRegisterComponent implements OnInit {
     });
 
     if (this.isUpdate) {
+      if(this.isUpdate.headquarters){
+        this.isUpdate.isHeadQuarter = false;
+      }
+
       this.clientForm.patchValue(
         this.isUpdate
       );
     }
 
+    this.listHeadQuarters();
+
+
   }
 
   register() {
 
-    if (this.clientForm.invalid) return;
+    //if (this.clientForm.invalid) return;
 
     this.spinner.show();
 
+    let formValues = this.clientForm.value;
+
+    if(formValues.isHeadQuarter){
+      delete formValues.headquarters;
+    }
+
     if (this.isUpdate) {
-      this.clientService.update(this.clientForm.value)
-        .subscribe(() => {
-          this.toastr.success('Funcionário atualizado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+      this.clientService.update(formValues._id, formValues)
+        .subscribe((data) => {
+          this.spinner.hide();
+          if(!data.errors){
+            this.toastr.success('Cliente atualizado com sucesso.', 'Sucesso');
+            this.router.navigate(['/client/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
         }, err => {
-          this.toastr.error('Problema ao atualizar o funcionário.' + err.error.msg, 'Erro: ');
+          this.spinner.hide();
+          if(err && err.error && err.error.keyValue && err.error.keyValue.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
         });
     } else {
-      this.clientService.register(this.clientForm.value)
-        .subscribe(() => {
-          this.toastr.success('Funcionário cadastrado com sucesso.', 'Sucesso');
-          this.router.navigate(['/user/list']);
+      let formValue = formValues;
+      delete formValue._id;
+      this.clientService.register(formValue)
+        .subscribe((data) => {
+          this.spinner.hide();
+          
+          if(!data.errors){
+            this.toastr.success('Cliente cadastrado com sucesso.', 'Sucesso');
+            this.router.navigate(['/client/list']);  
+          } else {
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          }
+
         }, err => {
-          this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          this.spinner.hide();
+          if(err && err.error && err.error.errors && err.error.errors.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
         });
     }
   }
@@ -121,6 +158,23 @@ export class ClientRegisterComponent implements OnInit {
           },
         });
       });
+  }
+
+  listHeadQuarters(){
+    this.clientService.getAllHeadQuarters() 
+    .subscribe((data) => {
+
+    this.spinner.hide();
+    this.headQuartersList = data;
+    
+    }, err => {
+      this.spinner.hide();
+      this.toastr.error('Problema ao listar Matrizes.' + err.error.message, 'Erro: ');
+    });
+  }
+
+  voltar(){
+    this.router.navigate(['/client/list']);
   }
 
 

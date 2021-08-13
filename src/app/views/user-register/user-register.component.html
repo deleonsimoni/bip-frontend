@@ -10,19 +10,28 @@
 
                 <div class="form-group">
                     <label for="company">Nome Completo</label>
-                    <input  placeholder="Nome Completo" class="form-control" formControlName="name" name="fullname" required>
+                    <input [class.is-invalid]="userForm.get('name').invalid && userForm.get('name').touched"  placeholder="Nome Completo" class="form-control" formControlName="name" name="fullname" required>
+                    <div class="invalid-feedback">
+                        Digite o nome do Funcionário.
+                    </div>
                 </div>
                 
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label for="vat">CPF <span></span>
+                        <label for="vat">CPF<span></span>
                         </label> 
-                        <input  placeholder="CPF" class="form-control" formControlName="cpf" name="cpf" mask="000.000.000-00">
+                        <input [class.is-invalid]="userForm.get('cpf').invalid && userForm.get('cpf').touched"   placeholder="CPF" class="form-control" formControlName="cpf" name="cpf" mask="000.000.000-00">
+                        <div class="invalid-feedback">
+                            Digite um CPF válido.
+                        </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="vat">Email <span></span>
                         </label> 
-                        <input type="email" placeholder="Email" class="form-control" formControlName="email" name="Email">
+                        <input [class.is-invalid]="userForm.get('email').invalid && userForm.get('email').touched" type="email" placeholder="Email" class="form-control" formControlName="email" name="Email">
+                        <div class="invalid-feedback">
+                            Digite um e-mail válido
+                        </div>
                     </div>
                 </div>
 
@@ -38,6 +47,14 @@
                         name="main">                    
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="price">Valor da hora do profissional<span></span>
+                    </label> 
+                    <input currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }" placeholder="R$" class="form-control" formControlName="price" name="price">
+                    
+                </div>
+                   
 
                 <div formArrayName="address">
                     <div class="form-group row col-sm-6">
@@ -71,7 +88,11 @@
                     </div>
                </div>
                 <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                    <button type="submit" class="btn btn-block btn-outline-success">Salvar</button>
+                    <button type="submit" [disabled]="!userForm.valid" class="btn btn-block btn-outline-success">Salvar</button>
+                </div>
+                <br/>
+                <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                    <button type="button" (click)="voltar()" class="btn btn-block btn-outline-danger">Voltar</button>
                 </div>
                 
             </form>
