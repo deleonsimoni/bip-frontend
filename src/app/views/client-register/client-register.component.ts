@@ -16,8 +16,7 @@ export class ClientRegisterComponent implements OnInit {
 
   clientForm: FormGroup;
   isUpdate = null;
-  isMAtriz = true;
-  headQuarters = [];
+  headQuartersList = [];
 
   constructor(
     private fb: FormBuilder,
@@ -38,9 +37,11 @@ export class ClientRegisterComponent implements OnInit {
     this.clientForm = this.fb.group({
       name: ['', [Validators.required]],
       isHeadQuarter: [true],
-      idHeadQuarter: [true],
+      headquarters: [null],
       _id: [''],
-      email: ['', [Validators.email]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       document: [''],
       userTypeAccess:[''],
       complementAddress: [''],
@@ -62,6 +63,10 @@ export class ClientRegisterComponent implements OnInit {
     });
 
     if (this.isUpdate) {
+      if(this.isUpdate.headquarters){
+        this.isUpdate.isHeadQuarter = false;
+      }
+
       this.clientForm.patchValue(
         this.isUpdate
       );
@@ -78,8 +83,14 @@ export class ClientRegisterComponent implements OnInit {
 
     this.spinner.show();
 
+    let formValues = this.clientForm.value;
+
+    if(formValues.isHeadQuarter){
+      delete formValues.headquarters;
+    }
+
     if (this.isUpdate) {
-      this.clientService.update(this.clientForm.value)
+      this.clientService.update(formValues._id, formValues)
         .subscribe((data) => {
           this.spinner.hide();
           if(!data.errors){
@@ -90,10 +101,14 @@ export class ClientRegisterComponent implements OnInit {
           }
         }, err => {
           this.spinner.hide();
-          this.toastr.error('Problema ao atualizar o Cliente.' + err.error.message, 'Erro: ');
+          if(err && err.error && err.error.keyValue && err.error.keyValue.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
         });
     } else {
-      let formValue = this.clientForm.value;
+      let formValue = formValues;
       delete formValue._id;
       this.clientService.register(formValue)
         .subscribe((data) => {
@@ -108,7 +123,11 @@ export class ClientRegisterComponent implements OnInit {
 
         }, err => {
           this.spinner.hide();
-          this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          if(err && err.error && err.error.errors && err.error.errors.email){
+            this.toastr.error('Email já se encontra na base de dados', 'Atenção');
+          } else {
+            this.toastr.error('Problema ao realizar o cadastro. ', 'Erro: ');
+          }
         });
     }
   }
@@ -146,7 +165,7 @@ export class ClientRegisterComponent implements OnInit {
     .subscribe((data) => {
 
     this.spinner.hide();
-    this.headQuarters = data;
+    this.headQuartersList = data;
     
     }, err => {
       this.spinner.hide();

@@ -9,14 +9,13 @@
         <div class="card-body">
 
         <div class="form-group row">
-            
+
             <div class="col-md-7">
-                <select id="select2" name="select2" class="form-control form-control-lg">
-                    <option value="0">Selecione o funcionário</option>
-                    <option value="1">João</option>
-                    <option value="2">Zé</option>
-                </select>
-            </div>
+              <select id="select2" name="select2" class="form-control form-control-lg">
+                <option selected="true" disabled>Selecione</option>
+                <option *ngFor="let employee of employees" [ngValue]="employee.id">{{employee.name}}</option>
+              </select>
+          </div>
 
             <div class="col-md-5">
                 <div >

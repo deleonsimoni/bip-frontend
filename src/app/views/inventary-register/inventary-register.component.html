@@ -1,0 +1,128 @@
+<div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <strong>Inventário</strong>
+        <small>{{isUpdate ? 'Atualizar' : 'Cadastrar'}}</small>
+      </div>
+      <div class="card-body">
+        <form class="user" [formGroup]="inventaryForm" (ngSubmit)="register()">
+
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label class="col-form-label" for="date-input">Data Inicio</label>
+                    <div class="">
+                        <input class="form-control" formControlName="initialDate" id="date-input" type="date" name="date-input" placeholder="date">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class=" col-form-label" for="date-input">Data Fim</label>
+                    <div class="">
+                        <input class="form-control" formControlName="endDate" id="date-input" type="date" name="date-input" placeholder="date">
+                    </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                  <label for="company">Selecione o cliente</label>
+                  <select id="select2" formControlName="selectedClient" name="select2" class="form-control">
+                    <option [ngValue]="null" disabled>Selecione</option>
+                    <option *ngFor="let client of clients" [ngValue]="client.id">{{client.name}}</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                <label for="bip">Funcionários que irão bipar</label>
+                <ng-select  [multiple]="true" [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}">
+                    <ng-option *ngFor="let employee of employees" [value]="employee.id" [disabled]="employee.disabled">{{employee.name}}</ng-option>
+                </ng-select>
+            </div>
+
+
+              <div class="form-group ml-3">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="quantitie">Permitirá funcionário incluir quantidade?</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="switch switch-label switch-pill switch-success">
+                            <input formControlName="isSetQuantitie" type="checkbox" class="switch-input" checked>
+                            <span class="switch-slider" data-checked="Sim" data-unchecked="Não"></span>
+                        </label>
+                    </div>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="file-input">Arquivo referência cliente</label>
+                <div class="col-md-9">
+                  <input  type="file" id="file-input" name="file-input">
+                </div>
+              </div>
+
+              
+              
+            <div formArrayName="positionFile">
+
+              <div class="row">
+                  <div class="form-group col-sm-4">
+                      <label for="vat">Referência <span></span>
+                      </label> 
+                      <input formControlName="refer"  placeholder="1 - 4" class="form-control" >
+                  </div>
+                  <div class="form-group col-sm-4">
+                      <label for="vat">Referência Anterior<span></span>
+                      </label> 
+                      <input formControlName="referPrev"  placeholder="4 - 6" class="form-control" >
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <label for="vat">Descrição<span></span>
+                    </label> 
+                    <input formControlName="description"  placeholder="6 - 9" class="form-control">
+                </div>
+              </div>
+
+              <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label >Preço <span></span>
+                            </label> 
+                            <input formControlName="price" placeholder="9 - 11" class="form-control" >
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label >Situação<span></span>
+                            </label> 
+                            <input formControlName="situation" placeholder="11 - 15" class="form-control" >
+                        </div>
+                        <div class="form-group col-sm-4">
+                        <label>Setor<span></span>
+                        </label> 
+                        <input formControlName="sector" placeholder="15 - 20" class="form-control" >
+                    </div>
+               </div>
+
+            </div>
+
+            <div class="form-group">
+                <label >Observações <span></span>
+                </label> 
+                <div>
+                  <textarea formControlName="description" id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="Observações sobre o inventário"></textarea>
+                </div>
+              </div>
+             
+
+             
+              <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                  <button type="submit" class="btn btn-block btn-outline-success">Salvar</button>
+              </div>
+              <br/>
+              <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                  <button type="button" (click)="voltar()" class="btn btn-block btn-outline-danger">Voltar</button>
+              </div>
+              
+          </form>
+
+      </div>
+    </div>
+  </div><!--/.col-->

@@ -24,16 +24,19 @@
               <div class="form-group row" *ngIf="!clientForm.value.isHeadQuarter">
                 <label class="col-md-3 col-form-label" for="select2">Selecione a Matriz</label>
                 <div class="col-md-9">
-                  <select id="select2" formControlName="idHeadQuarter" name="select2" class="form-control">
-                    <option [ngValue]="null" disabled>Selecione</option>
-                    <option *ngFor="let headQuarter of headQuarters" [ngValue]="headQuarter.id">{{headQuarter.name}}</option>
+                  <select id="select2" formControlName="headquarters" name="select2" class="form-control">
+                    <option selected="true" disabled>Selecione a Matriz</option>
+                    <option *ngFor="let headQuarter of headQuartersList" [ngValue]="headQuarter._id">{{headQuarter.name}}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
                   <label for="company">Nome da Empresa</label>
-                  <input  placeholder="Nome da Empresa" class="form-control" formControlName="name" name="fullname" required>
+                  <input [class.is-invalid]="clientForm.get('name').invalid && clientForm.get('name').touched" placeholder="Nome da Empresa" class="form-control" formControlName="name" name="fullname" required>
+                  <div class="invalid-feedback">
+                    Digite o nome da empresa.
+                </div>
               </div>
               
               <div class="row">
@@ -45,7 +48,10 @@
                   <div class="form-group col-sm-6">
                       <label for="vat">Email Responsável<span></span>
                       </label> 
-                      <input type="email" placeholder="Email Responsável" class="form-control" formControlName="email" name="Email">
+                      <input  [class.is-invalid]="clientForm.get('email').invalid && clientForm.get('email').touched" type="email" placeholder="Email Responsável" class="form-control" formControlName="email" name="Email">
+                      <div class="invalid-feedback">
+                        Digite um e-mail válido
+                    </div>
                   </div>
               </div>
 
@@ -94,7 +100,7 @@
                   </div>
              </div>
               <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                  <button type="button" class="btn btn-block btn-outline-success">Salvar</button>
+                  <button type="submit" [disabled]="!clientForm.valid" class="btn btn-block btn-outline-success">Salvar</button>
               </div>
               <br/>
               <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">

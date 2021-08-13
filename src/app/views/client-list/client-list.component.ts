@@ -32,8 +32,6 @@ export class ClientListComponent implements OnInit {
   ngOnInit(): void {
     this.spinner.show();
     this.listMyClients();
-
-   
   }
 
   listMyClients(){

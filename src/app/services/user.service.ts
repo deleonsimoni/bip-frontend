@@ -13,8 +13,8 @@ export class UserService {
     return this.http.post<any>(`${environment.urlBIP}/user`, user);
   }
 
-  update(user: any) {
-    return this.http.put<any>(`${environment.urlBIP}/user/register`, user);
+  update(id: any, user: any) {
+    return this.http.put<any>(`${environment.urlBIP}/user/${id}`, user);
   }
 
   delete(id) {

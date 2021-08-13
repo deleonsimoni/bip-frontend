@@ -22,17 +22,17 @@ export const navItems: INavData[] = [
       {
         name: 'Listar',
         url: '/user/list',
-        icon: 'icon-briefcase'
+        icon: 'cil-list-rich'
       },
       {
         name: 'Cadastrar',
         url: '/user/register',
-        icon: 'icon-briefcase'
+        icon: 'cil-color-border'
       },
       {
         name: 'TimeSheet',
         url: '/user/timeSheet',
-        icon: 'cil-av-timer'
+        icon: 'cil-spreadsheet'
       }
     ]
   },
@@ -44,12 +44,12 @@ export const navItems: INavData[] = [
       {
         name: 'Listar',
         url: '/client/list',
-        icon: 'cil-dollar'
+        icon: 'cil-list-rich'
       },
       {
         name: 'Cadastrar',
         url: '/client/register',
-        icon: 'cil-dollar'
+        icon: 'cil-color-border'
       }
     ]
   },
@@ -61,7 +61,23 @@ export const navItems: INavData[] = [
     name: 'Gerenciar',
     url: '/inventary',
     icon: 'cil-barcode',
-
+    children: [
+      {
+        name: 'Listar',
+        url: '/inventary/list',
+        icon: 'cil-list-rich'
+      },
+      {
+        name: 'Dashboard',
+        url: '/inventary/dashboard',
+        icon: 'cil-chart-pie'
+      },
+      {
+        name: 'Cadastrar',
+        url: '/inventary/register',
+        icon: 'cil-color-border'
+      }
+    ]
   },
   {
     title: true,

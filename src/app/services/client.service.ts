@@ -10,11 +10,11 @@ export class ClientService {
   constructor(private http: HttpClient,) { }
 
   register(client: any) {
-    return this.http.post<any>(`${environment.urlBIP}/client/register`, client);
+    return this.http.post<any>(`${environment.urlBIP}/client`, client);
   }
 
-  update(client: any) {
-    return this.http.put<any>(`${environment.urlBIP}/client/register`, client);
+  update(id, client: any) {
+    return this.http.put<any>(`${environment.urlBIP}/client/${id}`, client);
   }
 
   delete(id) {

@@ -4,7 +4,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UtilService } from '../../services/util.service';
 import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';  
 
 @Component({
   selector: 'app-procv',

@@ -56,6 +56,9 @@ import { InventaryListModule } from './views/inventary-list/inventary-list.modul
 import { ProcvModule } from './views/procv/procv.module';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ModalsModule } from './modals/modals.module';
+import { InventaryRegisterModule } from './views/inventary-register/inventary-register.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxCurrencyModule } from 'ngx-currency';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -86,8 +89,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ClientListModule,
     ClientRegisterModule,
     InventaryListModule,
+    InventaryRegisterModule,
     ProcvModule,
-    ModalsModule
+    ModalsModule,
+    NgSelectModule,
+    NgxCurrencyModule
   ],
   declarations: [
     AppComponent,
