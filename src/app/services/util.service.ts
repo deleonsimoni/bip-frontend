@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import cep from 'cep-promise'
 
 @Injectable({
@@ -17,8 +17,12 @@ export class UtilService {
       cep(cependreco.replace("-", "")).then((value) => {
         observer.next(value);
       }, err => {
-        observer.error("Este CEP não foi localizado na base do correio.");
+        observer.error("Este CEP não foi localizado na base dos correios.");
       });
     });
+
+   
   }
+
+ 
 }
