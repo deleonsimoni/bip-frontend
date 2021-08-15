@@ -11,7 +11,7 @@
                 <div class="col-sm-6">
                     <label class="col-form-label" for="date-input">Data Inicio</label>
                     <div class="">
-                        <input class="form-control" formControlName="initialDate" id="date-input" type="date" name="date-input" placeholder="date">
+                        <input class="form-control" formControlName="startDate" id="date-input" type="date" name="date-input" placeholder="date">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <div class="row">
                         <label class="switch switch-label switch-pill switch-success">
-                            <input formControlName="isSetQuantitie" type="checkbox" class="switch-input" checked>
+                            <input formControlName="isQuantify" type="checkbox" class="switch-input" checked>
                             <span class="switch-slider" data-checked="Sim" data-unchecked="Não"></span>
                         </label>
                     </div>
@@ -57,7 +57,11 @@
               <div class="form-group row">
                 <label class="col-md-3 col-form-label" for="file-input">Arquivo referência cliente</label>
                 <div class="col-md-9">
-                  <input  type="file" id="file-input" name="file-input">
+                  <input 
+                        formControlName="fileClient"
+                        id="fileClientInput" 
+                        type="file" 
+                        (change)="onFileChange($event)">
                 </div>
               </div>
 

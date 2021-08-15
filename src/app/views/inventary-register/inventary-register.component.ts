@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -33,7 +33,7 @@ export class InventaryRegisterComponent implements OnInit {
     private clientService: ClientService,
     private inventaryService: InventaryService,
     private userService: UserService,
-
+    private host: ElementRef<HTMLInputElement>
   ) { }
 
 
@@ -47,17 +47,16 @@ export class InventaryRegisterComponent implements OnInit {
   ngOnInit(): void {
 
     this.inventaryForm = this.fb.group({
-      name: ['', [Validators.required]],
       _id: [''],
       description: ['',],
-      initialDate: [''],
+      startDate: [''],
       endDate:[''],
-      isSetQuantitie:[false],
+      isQuantify:[false],
       employees: this.fb.array([]),
       selectedClient: [null],
-      fileClient: [''],
+      fileClient: [null],
       positionFile: this.fb.group({
-        refer: ['', [Validators.required]],
+        refer: [''],
         referPrev: [''],
         description: [''],
         price: [''],
@@ -83,8 +82,15 @@ export class InventaryRegisterComponent implements OnInit {
 
     this.spinner.show();
 
+    const formData = new FormData();
+    let formValue = this.inventaryForm.value;
+    formData.append('file', this.inventaryForm.get('fileClient').value);
+    delete formValue.fileClient;
+    formData.append('formulario', formValue);
+
+
     if (this.isUpdate) {
-      this.clientService.update(null, this.inventaryForm.value)
+      this.clientService.update(formValue._id, formData)
         .subscribe((data) => {
           this.spinner.hide();
           if(!data.errors){
@@ -98,7 +104,6 @@ export class InventaryRegisterComponent implements OnInit {
           this.toastr.error('Problema ao atualizar o inventário.' + err.error.message, 'Erro: ');
         });
     } else {
-      let formValue = this.inventaryForm.value;
       delete formValue._id;
       this.clientService.register(formValue)
         .subscribe((data) => {
@@ -118,6 +123,14 @@ export class InventaryRegisterComponent implements OnInit {
     }
   }
 
+  onFileChange(event) {
+    if(event.target.files.length > 0) 
+    {
+      this.inventaryForm.patchValue({
+         fileClient: event.target.files[0],
+      })
+    }
+  }
 
   listClients(){
     this.clientService.getAll() 
