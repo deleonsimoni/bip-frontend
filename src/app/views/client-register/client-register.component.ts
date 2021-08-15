@@ -134,7 +134,7 @@ export class ClientRegisterComponent implements OnInit {
 
   async changeFindCEP(cep) {
     this.utilService.findCep(cep.target.value).subscribe(
-      (cepReturn) => {
+      (cepReturn: any) => {
           this.clientForm.patchValue({
             address: {
               street: cepReturn.street,
@@ -145,18 +145,6 @@ export class ClientRegisterComponent implements OnInit {
               country: "Brasil",
             },
           });
-      },
-      () => {
-        this.clientForm.patchValue({
-          address: {
-            street: '',
-            zip: '',
-            district: '',
-            city: '',
-            state: '',
-            country: '',
-          },
-        });
       });
   }
 
