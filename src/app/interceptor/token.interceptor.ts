@@ -24,8 +24,14 @@ export class TokenInterceptor implements HttpInterceptor {
     if (token) {
       headersConfig['Authorization'] = `Bearer ${token}`;
     }
+    
+    let request;
 
-    const request = req.clone({ setHeaders: headersConfig });
+    if(req.url.includes("viacep")){
+      request = req.clone();
+    } else {
+      request = req.clone({ setHeaders: headersConfig });
+    }
     return next.handle(request);
   }
 }

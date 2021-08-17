@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Completar códigos com 0 a esquerda
+        </div>
+        <div class="card-body">
+                  
+            <h5>Neste menu você consegue completar os espaços faltantes de códigos incluindo zero a esquerda</h5>
+            <p>
+                Qual o tamanho que deve ser considerado como válido? <br/>
+                <input type="number" [(ngModel)]="tamanho">
+            </p>
+            <p>
+                Arquivo de códigos descrepantes <br/>
+                <input type="file" id="leftpadFile" name="leftpadFile" accept=".txt, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+            </p>
+            <h3>OU</h3>
+            <p>
+                Cole aqui os textos<br/>
+                <textarea rows="10" [(ngModel)]="codigos" id="textarea-input" name="textarea-input" class="form-control" placeholder="Códigos a serem completados"></textarea>
+            </p>
+            <hr>
+            <p *ngIf="processouCodText">
+                Resultado <br/>
+                <button [ngxClipboard]="resultadoTextCopy" type="button" class="btn btn-primary"><i class="fa fa-copy"></i>&nbsp;Copiar para área de tranferência</button>
+                <textarea rows="10" #resultadoTextCopy [(ngModel)]="resultado" readonly id="textarea-inputdisabled" name="textarea-input" class="form-control" ></textarea>
+            </p>
+        
+            <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                <button (click)="processar()" class="btn btn-block btn-outline-success">Processar</button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>

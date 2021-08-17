@@ -89,4 +89,9 @@ export const navItems: INavData[] = [
     icon: 'cil-spreadsheet',
 
   },
+  {
+    name: 'Completar com 0',
+    url: '/leftpad',
+    icon: 'cil-wrap-text',
+  },
   ];

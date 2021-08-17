@@ -12,6 +12,7 @@ import { HomeComponent } from './views/home/home.component';
 import { InventaryDashboardComponent } from './views/inventary-dashboard/inventary-dashboard.component';
 import { InventaryListComponent } from './views/inventary-list/inventary-list.component';
 import { InventaryRegisterComponent } from './views/inventary-register/inventary-register.component';
+import { LeftPadComponent } from './views/left-pad/left-pad.component';
 import { LoginComponent } from './views/login/login.component';
 import { ProcvComponent } from './views/procv/procv.component';
 import { RegisterComponent } from './views/register/register.component';
@@ -108,6 +109,13 @@ export const routes: Routes = [
         component: ProcvComponent,
         data: {
           title: 'Bater Excels'
+        }
+      },
+      {
+        path: 'leftpad',
+        component: LeftPadComponent,
+        data: {
+          title: 'Completar com zeros'
         }
       },
       {

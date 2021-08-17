@@ -59,6 +59,9 @@ import { ModalsModule } from './modals/modals.module';
 import { InventaryRegisterModule } from './views/inventary-register/inventary-register.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { LeftPadComponent } from './views/left-pad/left-pad.component';
+import { LeftPadModule } from './views/left-pad/left-pad.module';
+import { ClipboardModule } from 'ngx-clipboard';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -93,7 +96,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ProcvModule,
     ModalsModule,
     NgSelectModule,
-    NgxCurrencyModule
+    NgxCurrencyModule,
+    LeftPadModule,
+    ClipboardModule,
+    
   ],
   declarations: [
     AppComponent,
