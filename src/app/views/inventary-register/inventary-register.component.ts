@@ -53,7 +53,7 @@ export class InventaryRegisterComponent implements OnInit {
       endDate:[''],
       isQuantify:[false],
       employees: this.fb.array([]),
-      selectedClient: [null],
+      client: [null],
       fileClient: [null],
       positionFile: this.fb.group({
         refer: [''],
@@ -84,13 +84,14 @@ export class InventaryRegisterComponent implements OnInit {
 
     const formData = new FormData();
     let formValue = this.inventaryForm.value;
+    formValue.employees = this.selectedEmployees;
     formData.append('file', this.inventaryForm.get('fileClient').value);
     delete formValue.fileClient;
-    formData.append('formulario', formValue);
 
 
     if (this.isUpdate) {
-      this.clientService.update(formValue._id, formData)
+      formData.append('formulario', JSON.stringify(formValue));
+      this.inventaryService.update(formValue._id, formData)
         .subscribe((data) => {
           this.spinner.hide();
           if(!data.errors){
@@ -105,7 +106,8 @@ export class InventaryRegisterComponent implements OnInit {
         });
     } else {
       delete formValue._id;
-      this.clientService.register(formValue)
+      formData.append('formulario', JSON.stringify(formValue));
+      this.inventaryService.register(formData)
         .subscribe((data) => {
           this.spinner.hide();
           

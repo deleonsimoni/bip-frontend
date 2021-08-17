@@ -24,16 +24,16 @@
 
               <div class="form-group">
                   <label for="company">Selecione o cliente</label>
-                  <select id="select2" formControlName="selectedClient" name="select2" class="form-control">
-                    <option [ngValue]="null" disabled>Selecione</option>
-                    <option *ngFor="let client of clients" [ngValue]="client.id">{{client.name}}</option>
+                  <select id="select2" formControlName="client" name="select2" class="form-control">
+                    <option selected="true" disabled>Selecione o Cliente</option>
+                    <option *ngFor="let client of clients" [ngValue]="client._id">{{client.name}}</option>
                   </select>
               </div>
 
               <div class="form-group">
                 <label for="bip">Funcionários que irão bipar</label>
                 <ng-select  [multiple]="true" [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}">
-                    <ng-option *ngFor="let employee of employees" [value]="employee.id" [disabled]="employee.disabled">{{employee.name}}</ng-option>
+                    <ng-option *ngFor="let employee of employees" [value]="employee._id" [disabled]="employee.disabled">{{employee.name}}</ng-option>
                 </ng-select>
             </div>
 
