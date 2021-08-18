@@ -140,7 +140,7 @@ export class ProcvComponent implements OnInit {
     
                   if(!achei){
                       rowsClient[index][posContabilizado] = 0;
-                      rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient];
+                      rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] * -1;
                   }
               }
           }
