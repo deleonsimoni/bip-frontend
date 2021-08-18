@@ -35,6 +35,17 @@ export class ProcvComponent implements OnInit {
     let fileReaderBip = new FileReader();    
     let contagemTotal = 0;
 
+    const posCodBarraClient = 9;
+    const posQuantidadeClient = 10;
+
+    const posCodBarraBIP = 1;
+    const posContabilizado = 11;
+    const posDiferenca = 12;
+    const posQuantidadeBipada = 3;
+
+    const posSumarioFinal = 13;
+
+
       try {
         if(!fileCliente){
           this.spinner.hide();
@@ -91,12 +102,12 @@ export class ProcvComponent implements OnInit {
               }
     
               if(index == 0){
-                  rowsClient[index][6] = 'Contabilizados';
-                  rowsClient[index][7] = 'Diferença';
+                  rowsClient[index][posContabilizado] = 'Contabilizados';
+                  rowsClient[index][posDiferenca] = 'Diferença';
                   continue;
-              } if (index == 1){
+              } /* pulando linha do TOTAL if (index == 1){
                   continue;
-              } else {
+              }*/ else {
     
                   let achei = false;
                   let contabilizacaoRepetida = 0;
@@ -106,19 +117,19 @@ export class ProcvComponent implements OnInit {
                       if(jotex == 0){
                           continue;
                       } else {
-                          if(!rowsClient[index][3]){
+                          if(!rowsClient[index][posCodBarraClient]){
                             this.acabou = true;
                               break;
                           }
-                          if(rowsBip[jotex][0] == rowsClient[index][3] || rowsBip[jotex][0] == rowsClient[index][0]){
+                          if(rowsBip[jotex][posCodBarraBIP].trim() == rowsClient[index][posCodBarraClient].trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
                               
-                              contagemTotal += rowsBip[jotex][2];
-                              contabilizacaoRepetida += rowsBip[jotex][2];
-                              rowsClient[index][6] = contabilizacaoRepetida;
-                              if(rowsClient[index][5] >= 0){
-                                  rowsClient[index][7] = contabilizacaoRepetida - rowsClient[index][5];
+                              contagemTotal += rowsBip[jotex][posQuantidadeBipada];
+                              contabilizacaoRepetida += rowsBip[jotex][posQuantidadeBipada];
+                              rowsClient[index][posContabilizado] = contabilizacaoRepetida;
+                              if(rowsClient[index][posQuantidadeClient] >= 0){
+                                  rowsClient[index][posDiferenca] = contabilizacaoRepetida - rowsClient[index][posQuantidadeClient];
                               } else {
-                                  rowsClient[index][7] = rowsClient[index][5] + contabilizacaoRepetida;
+                                  rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] + contabilizacaoRepetida;
                               }
                               achei = true;
                           
@@ -128,13 +139,14 @@ export class ProcvComponent implements OnInit {
                   }
     
                   if(!achei){
-                      rowsClient[index][6] = 0;
-                      rowsClient[index][7] = rowsClient[index][5];
+                      rowsClient[index][posContabilizado] = 0;
+                      rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient];
                   }
               }
           }
 
-          rowsClient[1][6] = contagemTotal;
+          rowsClient[1][posSumarioFinal] = contagemTotal;
+          rowsClient[0][posSumarioFinal] = 'Quantidade Total';
 
           workbook = XLSX.utils.book_new();
           workbook.Props = {
