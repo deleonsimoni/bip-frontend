@@ -55,7 +55,7 @@ export class LeftPadComponent implements OnInit {
       fileReader.onload = (e) => {
         let lines = fileReader.result.toString().split('\n');
         for(var i = 0;i < lines.length;i++){
-          this.resultado += this.utilService.pad(lines[i].trim(), this.tamanho) + "\n";
+          this.resultado += this.utilService.pad(lines[i].trim(), this.tamanho) + "\r\n";
         }
       }
       fileReader.readAsText(fileCliente);
