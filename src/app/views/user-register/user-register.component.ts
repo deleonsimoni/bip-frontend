@@ -134,11 +134,11 @@ export class UserRegisterComponent implements OnInit {
       (cepReturn: any) => {
           this.userForm.patchValue({
             address: {
-              street: cepReturn.street,
+              street: cepReturn.logradouro,
               zip: cepReturn.cep,
-              district: cepReturn.neighborhood,
-              city: cepReturn.city,
-              state: cepReturn.state,
+              district: cepReturn.bairro,
+              city: cepReturn.localidade,
+              state: cepReturn.uf,
               country: "Brasil",
             },
           });

@@ -14,9 +14,9 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private authService: AuthenticationService) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    
     const headersConfig = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'enctype': 'multipart/form-data'
     };
 
     const token = this.authService.getToken();
@@ -24,8 +24,14 @@ export class TokenInterceptor implements HttpInterceptor {
     if (token) {
       headersConfig['Authorization'] = `Bearer ${token}`;
     }
+    
+    let request;
 
-    const request = req.clone({ setHeaders: headersConfig });
+    if(req.url.includes("viacep")){
+      request = req.clone();
+    } else {
+      request = req.clone({ setHeaders: headersConfig });
+    }
     return next.handle(request);
   }
 }

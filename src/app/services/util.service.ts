@@ -13,12 +13,22 @@ export class UtilService {
   public log: any;
 
   findCep(cependreco: any) {
-    return Observable.create((observer) => {
-      cep(cependreco.replace("-", "")).then((value) => {
-        observer.next(value);
-      }, err => {
-        observer.error("Este CEP não foi localizado na base do correio.");
-      });
+    return this.http
+          .get(`https://viacep.com.br/ws/${cependreco.replace("-", "")}/json/`);
+  }
+
+  pad(num, size:number): string {
+    let s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+  }
+
+  delay(ms: number): Promise<boolean> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(true);
+      }, ms);
     });
   }
+
 }
