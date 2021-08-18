@@ -34,6 +34,7 @@ export class ProcvComponent implements OnInit {
     let fileReaderClient = new FileReader();    
     let fileReaderBip = new FileReader();    
     let contagemTotal = 0;
+    let diferencaTotal = 0;
 
     const posCodBarraClient = 9;
     const posQuantidadeClient = 10;
@@ -43,7 +44,8 @@ export class ProcvComponent implements OnInit {
     const posDiferenca = 12;
     const posQuantidadeBipada = 3;
 
-    const posSumarioFinal = 13;
+    const posSumarioTotalFinal = 14;
+    const posSumarioDiferencaFinal = 13;
 
 
       try {
@@ -131,6 +133,8 @@ export class ProcvComponent implements OnInit {
                               } else {
                                   rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] + contabilizacaoRepetida;
                               }
+
+                              diferencaTotal = rowsClient[index][posDiferenca];
                               achei = true;
                           
                               //break;
@@ -141,12 +145,57 @@ export class ProcvComponent implements OnInit {
                   if(!achei){
                       rowsClient[index][posContabilizado] = 0;
                       rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] * -1;
+                      diferencaTotal = rowsClient[index][posDiferenca];
                   }
               }
+
+            }
+
+            //Procurando os bipados que nao estao na tabela do cliente
+            let bipExtra = new Array();
+            for (let index = 0; index < rowsBip.length; index++) {
+
+             
+              if(index == 0){
+                  continue;
+              } else {
+    
+                  let achei = false;
+    
+                  for (let jotex = 0; jotex < rowsClient.length; jotex++) {    
+    
+                      if(jotex == 0){
+                          continue;
+                      } else {
+                          
+                          if(rowsBip[index][posCodBarraBIP].trim() == rowsClient[jotex][posCodBarraClient].trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
+                              achei = true;
+                              //break;
+                          }
+                      }
+                  }
+    
+                  if(!achei){
+                      let extraBipado = new Array();
+
+                      contagemTotal += rowsBip[index][posQuantidadeBipada];
+                      extraBipado[posCodBarraClient] = rowsBip[index][posCodBarraBIP];
+                      extraBipado[posContabilizado] = rowsBip[index][posQuantidadeBipada];
+                      extraBipado[posContabilizado -1] = 0;
+
+                      extraBipado[posDiferenca] = rowsBip[index][posQuantidadeBipada];
+                      bipExtra.push(extraBipado);
+                  }
+              }
+
           }
 
-          rowsClient[1][posSumarioFinal] = contagemTotal;
-          rowsClient[0][posSumarioFinal] = 'Quantidade Total';
+          rowsClient.push(...bipExtra);
+
+          rowsClient[1][posSumarioTotalFinal] = contagemTotal;
+          rowsClient[0][posSumarioTotalFinal] = 'Quantidade Total Bipada';
+          rowsClient[1][posSumarioDiferencaFinal] = diferencaTotal;
+          rowsClient[0][posSumarioDiferencaFinal] = 'Diferença Total';
 
           workbook = XLSX.utils.book_new();
           workbook.Props = {
