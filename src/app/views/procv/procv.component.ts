@@ -34,6 +34,7 @@ export class ProcvComponent implements OnInit {
     let fileReaderClient = new FileReader();    
     let fileReaderBip = new FileReader();    
     let contagemTotal = 0;
+    let contagemTotalEncontrada = 0;
     let diferencaTotal = 0;
 
     const posCodBarraClient = 9;
@@ -44,7 +45,9 @@ export class ProcvComponent implements OnInit {
     const posDiferenca = 12;
     const posQuantidadeBipada = 3;
 
-    const posSumarioTotalFinal = 14;
+    const posSumarioTotalBipado = 15;
+    const posSumarioTotalEncontrado = 14;
+
     const posSumarioDiferencaFinal = 13;
 
 
@@ -151,6 +154,7 @@ export class ProcvComponent implements OnInit {
 
             }
 
+            contagemTotalEncontrada = contagemTotal;
             //Procurando os bipados que nao estao na tabela do cliente
             let bipExtra = new Array();
             for (let index = 0; index < rowsBip.length; index++) {
@@ -192,8 +196,10 @@ export class ProcvComponent implements OnInit {
 
           rowsClient.push(...bipExtra);
 
-          rowsClient[1][posSumarioTotalFinal] = contagemTotal;
-          rowsClient[0][posSumarioTotalFinal] = 'Quantidade Total Bipada';
+          rowsClient[1][posSumarioTotalBipado] = contagemTotal;
+          rowsClient[0][posSumarioTotalBipado] = 'Quantidade Total Bipada';
+          rowsClient[1][posSumarioTotalEncontrado] = contagemTotalEncontrada;
+          rowsClient[0][posSumarioTotalEncontrado] = 'Quantidade Total Encontrada';
           rowsClient[1][posSumarioDiferencaFinal] = diferencaTotal;
           rowsClient[0][posSumarioDiferencaFinal] = 'Diferença Total';
 
