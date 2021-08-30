@@ -40,6 +40,9 @@ export class UserRegisterComponent implements OnInit {
         Validators.required,
         Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
       ]],
+      password: ['', [
+        Validators.required
+      ]],
       cpf: ['', [Validators.required, CustomValidator.isValidCpf]],
       userTypeAccess:[''],
       complementAddress: [''],
@@ -61,7 +64,9 @@ export class UserRegisterComponent implements OnInit {
 
     });
 
+
     if (this.isUpdate) {
+      delete this.isUpdate.password;
       this.userForm.patchValue(
         this.isUpdate
       );
