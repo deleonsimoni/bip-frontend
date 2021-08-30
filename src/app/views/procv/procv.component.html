@@ -12,10 +12,37 @@
                 <input type="file" id="excelCliente" name="excelCliente" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
             </p>
 
+            <div class="row">
+              <div class="form-group col-sm-6">
+                  <label for="vat">Coluna do código de barras do arquivo do cliente <span></span>
+                  </label> 
+                  <input type="number" placeholder="Número da coluna" [(ngModel)]="posCodBarraClient" class="form-control" >
+              </div>
+              <div class="form-group col-sm-6">
+                <label for="vat">Coluna do da quantidade do arquivo do cliente <span></span>
+                </label> 
+                <input type="number" placeholder="Número da coluna" [(ngModel)]="posQuantidadeClient" class="form-control" >
+              </div>
+            </div>
+            <hr>
             <p>
                 Arquivo do inventário<br/>
                 <input type="file" id="excelBipado" name="excelBipado" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
             </p>
+
+            <div class="row">
+              <div class="form-group col-sm-6">
+                  <label for="vat">Coluna do código de barras do arquivo do resultado <span></span>
+                  </label> 
+                  <input type="number"  placeholder="Número da coluna" [(ngModel)]="posCodBarraBIP" class="form-control" >
+              </div>
+              <div class="form-group col-sm-6">
+                <label for="vat">Coluna do da quantidade do arquivo do resultado <span></span>
+                </label> 
+                <input type="number"  placeholder="Número da coluna" [(ngModel)]="posQuantidadeBipada" class="form-control" >
+              </div>
+            </div>
+
             <hr>
         
             <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">

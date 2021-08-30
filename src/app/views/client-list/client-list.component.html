@@ -22,10 +22,10 @@
                     <td>{{ client.email }}</td>
                     <td> 
                       <div class="row align-items-center">
-                        <div class="col-4 ">
+                        <div class="mr-2 ml-4">
                           <button type="button" [routerLink]="['/client/register']" [state]="client" class="btn btn-primary"><i class="fa fa-pencil"></i>&nbsp;Atualizar</button>
                         </div>
-                        <div class="col-4 ">
+                        <div class="mr-2 ml-2">
                           <button type="button" data-toggle="modal" (click)="openModalDelete(client)" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;Deletar</button>
                         </div>
                       </div>

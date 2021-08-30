@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 })
 export class ProcvComponent implements OnInit {
 
+  posicaoCodigoBarrasCliente
   constructor(
     protected router: Router,
     private toastr: ToastrService,
@@ -20,9 +21,17 @@ export class ProcvComponent implements OnInit {
   ) { }
 
   acabou = false;
+  
+  //dados planilha resultado
+  posCodBarraBIP;
+  posQuantidadeBipada;
+
+  //dados planilha cliente
+  posCodBarraClient;
+  posQuantidadeClient;
 
   ngOnInit(): void {
-  }    
+  }
 
   processar() {
     this.spinner.show();
@@ -31,24 +40,21 @@ export class ProcvComponent implements OnInit {
     let fileBip = (<HTMLInputElement>document.getElementById('excelBipado')).files[0];
     let arrayBuffer;
     let filelist;
-    let fileReaderClient = new FileReader();    
-    let fileReaderBip = new FileReader();    
+    let fileReaderClient = new FileReader();
+    let fileReaderBip = new FileReader();
     let contagemTotal = 0;
+    let contagemTotalNovos = 0;
     let contagemTotalEncontrada = 0;
     let diferencaTotal = 0;
+    this.acabou = false;
 
-    const posCodBarraClient = 9;
-    const posQuantidadeClient = 10;
-
-    const posCodBarraBIP = 1;
     const posContabilizado = 11;
     const posDiferenca = 12;
-    const posQuantidadeBipada = 3;
 
-    const posSumarioTotalBipado = 15;
-    const posSumarioTotalEncontrado = 14;
-
-    const posSumarioDiferencaFinal = 13;
+    const posSumarioDiferencaFinal = 14;
+    const posSumarioTotalEncontrado = 15;
+    const posSumarioTotalBipado = 16;
+    const posSumarioTotalNovos = 17;
 
 
       try {
@@ -64,33 +70,44 @@ export class ProcvComponent implements OnInit {
           return;
         }
 
-        fileReaderClient.readAsArrayBuffer(fileCliente);     
+        if(!this.posCodBarraBIP || !this.posQuantidadeBipada || !this.posCodBarraClient || !this.posQuantidadeClient){
+          this.spinner.hide();
+          this.toastr.warning('Digite todos os campos para processar os arquivos.', 'Atenção');
+          return;
+        }
+
+        this.posCodBarraBIP -= 1;
+        this.posQuantidadeBipada -= 1;
+        this.posCodBarraClient -= 1;
+        this.posQuantidadeClient -= 1;
+
+        fileReaderClient.readAsArrayBuffer(fileCliente);
         fileReaderClient.onload = (e) => {
-            arrayBuffer = fileReaderClient.result;    
-            var data = new Uint8Array(arrayBuffer);    
-            var arr = new Array();    
-            for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-            var bstr = arr.join("");    
-            var workbook = XLSX.read(bstr, {type:"binary"});    
-            var first_sheet_name = workbook.SheetNames[0];    
-            var worksheet = workbook.Sheets[first_sheet_name];   
-            
+            arrayBuffer = fileReaderClient.result;
+            var data = new Uint8Array(arrayBuffer);
+            var arr = new Array();
+            for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+            var bstr = arr.join("");
+            var workbook = XLSX.read(bstr, {type:"binary"});
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+
             let rowsClient = XLSX.utils.sheet_to_json(worksheet, {
               raw: true, // Use raw values (true) or formatted strings (false)
               header: 1, // Generate an array of arrays ("2D Array")
             });
-            
-            fileReaderBip.readAsArrayBuffer(fileBip);     
-            fileReaderBip.onload = (e) => {  
-            arrayBuffer = fileReaderBip.result;    
-            data = new Uint8Array(arrayBuffer);    
-            arr = new Array();    
-            for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-            bstr = arr.join("");    
-            workbook = XLSX.read(bstr, {type:"binary"});    
-            first_sheet_name = workbook.SheetNames[0];    
-            worksheet = workbook.Sheets[first_sheet_name];   
-            
+
+            fileReaderBip.readAsArrayBuffer(fileBip);
+            fileReaderBip.onload = (e) => {
+            arrayBuffer = fileReaderBip.result;
+            data = new Uint8Array(arrayBuffer);
+            arr = new Array();
+            for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+            bstr = arr.join("");
+            workbook = XLSX.read(bstr, {type:"binary"});
+            first_sheet_name = workbook.SheetNames[0];
+            worksheet = workbook.Sheets[first_sheet_name];
+
             let rowsBip = XLSX.utils.sheet_to_json(worksheet, {
               raw: true, // Use raw values (true) or formatted strings (false)
               header: 1, // Generate an array of arrays ("2D Array")
@@ -105,7 +122,7 @@ export class ProcvComponent implements OnInit {
               if(this.acabou){
                   break;
               }
-    
+
               if(index == 0){
                   rowsClient[index][posContabilizado] = 'Contabilizados';
                   rowsClient[index][posDiferenca] = 'Diferença';
@@ -113,42 +130,42 @@ export class ProcvComponent implements OnInit {
               } /* pulando linha do TOTAL if (index == 1){
                   continue;
               }*/ else {
-    
+
                   let achei = false;
                   let contabilizacaoRepetida = 0;
-    
-                  for (let jotex = 0; jotex < rowsBip.length; jotex++) {    
-    
-                      if(jotex == 0){
+
+                  for (let jotex = 0; jotex < rowsBip.length; jotex++) {
+
+                      if(jotex == 0 || !rowsClient[index][this.posCodBarraClient]){
                           continue;
                       } else {
-                          if(!rowsClient[index][posCodBarraClient]){
+                          if(!rowsClient[index][this.posCodBarraClient]){
                             this.acabou = true;
                               break;
                           }
-                          if(rowsBip[jotex][posCodBarraBIP].trim() == rowsClient[index][posCodBarraClient].trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
-                              
-                              contagemTotal += rowsBip[jotex][posQuantidadeBipada];
-                              contabilizacaoRepetida += rowsBip[jotex][posQuantidadeBipada];
+                          if(rowsBip[jotex][this.posCodBarraBIP].toString().trim() == rowsClient[index][this.posCodBarraClient].toString().trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
+
+                              contagemTotal += rowsBip[jotex][this.posQuantidadeBipada];
+                              contabilizacaoRepetida += rowsBip[jotex][this.posQuantidadeBipada];
                               rowsClient[index][posContabilizado] = contabilizacaoRepetida;
-                              if(rowsClient[index][posQuantidadeClient] >= 0){
-                                  rowsClient[index][posDiferenca] = contabilizacaoRepetida - rowsClient[index][posQuantidadeClient];
+                              if(rowsClient[index][this.posQuantidadeClient] >= 0){
+                                  rowsClient[index][posDiferenca] = contabilizacaoRepetida - rowsClient[index][this.posQuantidadeClient];
                               } else {
-                                  rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] + contabilizacaoRepetida;
+                                  rowsClient[index][posDiferenca] = rowsClient[index][this.posQuantidadeClient] + contabilizacaoRepetida;
                               }
 
-                              diferencaTotal = rowsClient[index][posDiferenca];
+                              diferencaTotal += rowsClient[index][posDiferenca];
                               achei = true;
-                          
+
                               //break;
                           }
                       }
                   }
-    
+
                   if(!achei){
                       rowsClient[index][posContabilizado] = 0;
-                      rowsClient[index][posDiferenca] = rowsClient[index][posQuantidadeClient] * -1;
-                      diferencaTotal = rowsClient[index][posDiferenca];
+                      rowsClient[index][posDiferenca] = rowsClient[index][this.posQuantidadeClient] * -1;
+                      diferencaTotal += rowsClient[index][this.posQuantidadeClient];
                   }
               }
 
@@ -159,35 +176,36 @@ export class ProcvComponent implements OnInit {
             let bipExtra = new Array();
             for (let index = 0; index < rowsBip.length; index++) {
 
-             
+
               if(index == 0){
                   continue;
               } else {
-    
+
                   let achei = false;
-    
-                  for (let jotex = 0; jotex < rowsClient.length; jotex++) {    
-    
-                      if(jotex == 0){
+
+                  for (let jotex = 0; jotex < rowsClient.length; jotex++) {
+
+                      if(jotex == 0 || !rowsClient[jotex][this.posCodBarraClient]){
                           continue;
                       } else {
-                          
-                          if(rowsBip[index][posCodBarraBIP].trim() == rowsClient[jotex][posCodBarraClient].trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
+
+                          if(rowsBip[index][this.posCodBarraBIP].toString().trim() == rowsClient[jotex][this.posCodBarraClient].toString().trim() /* CASO TENHA CODIGO INTERNO || rowsBip[jotex][posCodBarraBIP] == rowsClient[index][0]*/){
                               achei = true;
-                              //break;
+                              break;
                           }
                       }
                   }
-    
+
                   if(!achei){
                       let extraBipado = new Array();
 
-                      contagemTotal += rowsBip[index][posQuantidadeBipada];
-                      extraBipado[posCodBarraClient] = rowsBip[index][posCodBarraBIP];
-                      extraBipado[posContabilizado] = rowsBip[index][posQuantidadeBipada];
+                      contagemTotal += rowsBip[index][this.posQuantidadeBipada];
+                      contagemTotalNovos += rowsBip[index][this.posQuantidadeBipada];
+                      extraBipado[this.posCodBarraClient] = rowsBip[index][this.posCodBarraBIP];
+                      extraBipado[posContabilizado] = rowsBip[index][this.posQuantidadeBipada];
                       extraBipado[posContabilizado -1] = 0;
 
-                      extraBipado[posDiferenca] = rowsBip[index][posQuantidadeBipada];
+                      extraBipado[posDiferenca] = rowsBip[index][this.posQuantidadeBipada];
                       bipExtra.push(extraBipado);
                   }
               }
@@ -196,10 +214,15 @@ export class ProcvComponent implements OnInit {
 
           rowsClient.push(...bipExtra);
 
-          rowsClient[1][posSumarioTotalBipado] = contagemTotal;
-          rowsClient[0][posSumarioTotalBipado] = 'Quantidade Total Bipada';
+          rowsClient[1][posSumarioTotalBipado] = contagemTotal - 1;
+          rowsClient[0][posSumarioTotalBipado] = 'Quantidade Total de Produtos Bipada';
+
           rowsClient[1][posSumarioTotalEncontrado] = contagemTotalEncontrada;
-          rowsClient[0][posSumarioTotalEncontrado] = 'Quantidade Total Encontrada';
+          rowsClient[0][posSumarioTotalEncontrado] = 'Quantidade Total de Produtos Conferidos';
+
+          rowsClient[1][posSumarioTotalNovos] = contagemTotalNovos;
+          rowsClient[0][posSumarioTotalNovos] = 'Quantidade Total de Produtos Bipados e Não Estavam na Tabela do Cliente';
+
           rowsClient[1][posSumarioDiferencaFinal] = diferencaTotal;
           rowsClient[0][posSumarioDiferencaFinal] = 'Diferença Total';
 
@@ -217,7 +240,7 @@ export class ProcvComponent implements OnInit {
           const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowsClient);
           const wb: XLSX.WorkBook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, 'Averiguacao');
-      
+
           XLSX.writeFile(wb, 'bip_export_' + new  Date().getTime() + '.xlsx');
 
           this.spinner.hide();
@@ -232,6 +255,6 @@ export class ProcvComponent implements OnInit {
     }
 
   }
-  
-  
+
+
 }
