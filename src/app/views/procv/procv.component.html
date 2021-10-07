@@ -2,53 +2,142 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Comparar Planilhas (PROC)
+          <i class="fa fa-align-justify"></i> Inventário em Excel
         </div>
         <div class="card-body">
-                  
-            <h5>Neste menu você consegue fazer a conciliação de arquivos entre os enviados pelo cliente e contabilizados em seu inventário</h5>
-            <p>
-                Arquivo do cliente <br/>
-                <input type="file" id="excelCliente" name="excelCliente" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-            </p>
+          <form class="user" [formGroup]="inventaryForm" (ngSubmit)="processarExcel()">
+    
+              <h5>Tem apenas o inventário em Excel? Sem problemas a gente faz o batimento pra você</h5>
+              
+              
+              <div class="form-group row">
+                <div class="col-sm-6">
+                    <label class="col-form-label" for="date-input">Data Inicio</label>
+                    <div class="">
+                        <input class="form-control" formControlName="startDate" id="date-input" type="date" name="date-input" placeholder="date">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class=" col-form-label" for="date-input">Data Fim</label>
+                    <div class="">
+                        <input class="form-control" formControlName="endDate" id="date-input" type="date" name="date-input" placeholder="date">
+                    </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="company">Selecione o cliente</label>
+                <select id="select2" formControlName="client" name="select2" class="form-control">
+                  <option selected="true" disabled>Selecione o Cliente</option>
+                  <option *ngFor="let client of clients" [ngValue]="client._id">{{client.name}}</option>
+                </select>
+              </div>
 
-            <div class="row">
-              <div class="form-group col-sm-6">
-                  <label for="vat">Coluna do código de barras do arquivo do cliente <span></span>
+            <div class="form-group">
+              <label for="bip">Funcionários que irão bipar</label>
+              <ng-select  [multiple]="true" [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}">
+                  <ng-option *ngFor="let employee of employees" [value]="employee._id" [disabled]="employee.disabled">{{employee.name}}</ng-option>
+              </ng-select>
+            </div>
+              
+            <hr/>
+              <p>
+                  <b>Arquivo com a base de dados do cliente do cliente </b><br/>
+                  <input type="file" id="excelCliente" name="excelCliente" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+              </p>
+
+              <div class="row">
+                Colunas
+              </div>
+
+              <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="vat">Código de Barras - Cliente <span></span>
+                    </label> 
+                    <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posCodBarraClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-4">
+                  <label for="vat">Quantidade - Cliente <span></span>
                   </label> 
-                  <input type="number" placeholder="Número da coluna" [(ngModel)]="posCodBarraClient" class="form-control" >
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="vat">Coluna do da quantidade do arquivo do cliente <span></span>
-                </label> 
-                <input type="number" placeholder="Número da coluna" [(ngModel)]="posQuantidadeClient" class="form-control" >
-              </div>
-            </div>
-            <hr>
-            <p>
-                Arquivo do inventário<br/>
-                <input type="file" id="excelBipado" name="excelBipado" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-            </p>
-
-            <div class="row">
-              <div class="form-group col-sm-6">
-                  <label for="vat">Coluna do código de barras do arquivo do resultado <span></span>
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posQuantidadeClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-4">
+                  <label for="vat">Descrição produto- Cliente <span></span>
                   </label> 
-                  <input type="number"  placeholder="Número da coluna" [(ngModel)]="posCodBarraBIP" class="form-control" >
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posDescricaoClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
               </div>
-              <div class="form-group col-sm-6">
-                <label for="vat">Coluna do da quantidade do arquivo do resultado <span></span>
+
+              <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="vat">Número produto - Cliente <span></span>
+                    </label> 
+                    <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posNumeroClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-4">
+                  <label for="vat">Marca - Cliente <span></span>
+                  </label> 
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posPriceClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-4">
+                  <label for="vat">Cor - Cliente <span></span>
+                  </label> 
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posCorClient" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+              </div>
+
+
+
+              <hr/>
+              <p>
+                 <b> Arquivo do inventário</b><br/>
+                  <input type="file" id="excelBipado" name="excelBipado" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+              </p>
+
+              <div class="row">
+                Colunas
+              </div>
+
+              <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="vat">Código de Barras <span></span>
+                    </label> 
+                    <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posCodBarraBIP" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="vat">Quantidade <span></span>
+                  </label> 
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posQuantidadeBipada" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="vat">Seção <span></span>
+                    </label> 
+                    <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posSecaoBIP" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="vat">Máquina <span></span>
+                  </label> 
+                  <input type="text" maxlength="1" (keypress)="textOnly($event)" placeholder="Letra da Coluna... A... B..." [(ngModel)]="posMaquinaBIP" [ngModelOptions]="{standalone: true}" class="form-control" >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label >Observações <span></span>
                 </label> 
-                <input type="number"  placeholder="Número da coluna" [(ngModel)]="posQuantidadeBipada" class="form-control" >
+                <div>
+                  <textarea formControlName="description" id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="Observações sobre o inventário"></textarea>
+                </div>
               </div>
-            </div>
 
-            <hr>
-        
-            <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                <button (click)="processar()" class="btn btn-block btn-outline-success">Processar</button>
-            </div>
-
+              <hr>
+          
+              <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                  <button type="submit" class="btn btn-block btn-outline-success">Processar</button>
+              </div>
+          </form>
         </div>
       </div>
     </div>

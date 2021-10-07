@@ -4,6 +4,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UtilService } from '../../services/util.service';
 import * as XLSX from 'xlsx';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ClientService } from '../../services/client.service';
+import { InventaryService } from '../../services/inventary.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-procv',
@@ -18,19 +22,231 @@ export class ProcvComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private utilService: UtilService,
+    private fb: FormBuilder,
+    private clientService: ClientService,
+    private inventaryService: InventaryService,
+    private userService: UserService,
   ) { }
 
   acabou = false;
-  
+
+  clients = [];
+  employees = [];
+  selectedEmployees = [];
+  inventaryForm: FormGroup;
+  itensClient = [];
+  itensBip = [];
+
   //dados planilha resultado
   posCodBarraBIP;
   posQuantidadeBipada;
+  posSecaoBIP;
+  posMaquinaBIP;
+  posCodBarraBIPNumber;
+  posQuantidadeBipadaNumber;
+  posSecaoBIPNumber;
+  posMaquinaBIPNumber;
 
   //dados planilha cliente
   posCodBarraClient;
   posQuantidadeClient;
+  posDescricaoClient;
+  posNumeroClient;
+  posPriceClient;
+  posCorClient;
+  posCodBarraClientNumber;
+  posQuantidadeClientNumber;
+  posDescricaoClientNumber;
+  posNumeroClientNumber;
+  posPriceClientNumber;
+  posCorClientNumber;
 
   ngOnInit(): void {
+
+    this.inventaryForm = this.fb.group({
+      description: ['',],
+      startDate: [''],
+      endDate:[''],
+      employees: this.fb.array([]),
+      client: [null],
+      fileClient: [null],
+      fileBip: [null],
+    });
+
+    this.listClients();
+    this.listEmployees();
+
+  }
+
+  toggleDisabled() {
+    const car: any = this.employees[1];
+    car.disabled = !car.disabled;
+  }
+
+  processarExcel(){
+    this.spinner.show();
+    let fileCliente = (<HTMLInputElement>document.getElementById('excelCliente')).files[0];
+    let fileBip = (<HTMLInputElement>document.getElementById('excelBipado')).files[0];
+    let fileReaderClient = new FileReader();
+    let fileReaderBip = new FileReader();
+    let arrayBuffer;
+
+    try {
+
+      if(!fileCliente){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento o arquivo do cliente.', 'Atenção');
+        return;
+      }
+
+      if(!fileBip){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento o arquivo do inventário.', 'Atenção');
+        return;
+      }
+
+      if(!this.posCodBarraBIP){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento a coluna do codigo de barras do arquivo bipado.', 'Atenção');
+        return;
+      }
+
+      if(!this.posQuantidadeBipada){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento a coluna de quantidade do arquivo bipado.', 'Atenção');
+        return;
+      }
+
+      if(!this.posCodBarraClient){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento a coluna do codigo de barras do arquivo do cliente.', 'Atenção');
+        return;
+      }
+
+      if(!this.posQuantidadeClient){
+        this.spinner.hide();
+        this.toastr.warning('Selecione corretamento a coluna de quantidade do arquivo do cliente.', 'Atenção');
+        return;
+      }
+
+
+      this.posCodBarraBIPNumber = this.posCodBarraBIP ? this.text2Number(this.posCodBarraBIP) : null;
+      this.posQuantidadeBipadaNumber = this.posQuantidadeBipada ? this.text2Number(this.posQuantidadeBipada) : null;
+      this.posSecaoBIPNumber  = this.posSecaoBIP      ? this.text2Number(this.posSecaoBIP) : null;
+      this.posMaquinaBIPNumber = this.posMaquinaBIP      ? this.text2Number(this.posMaquinaBIP) : null;
+
+      this.posCodBarraClientNumber = this.posCodBarraClient  ? this.text2Number(this.posCodBarraClient) : null;
+      this.posQuantidadeClientNumber = this.posQuantidadeClient? this.text2Number(this.posQuantidadeClient) : null;
+      this.posDescricaoClientNumber = this.posDescricaoClient ? this.text2Number(this.posDescricaoClient) : null;
+      this.posNumeroClientNumber = this.posNumeroClient    ? this.text2Number(this.posNumeroClient) : null;
+      this.posPriceClientNumber = this.posPriceClient     ? this.text2Number(this.posPriceClient) : null;
+      this.posCorClientNumber = this.posCorClient      ? this.text2Number(this.posCorClient) : null;
+
+      fileReaderClient.readAsArrayBuffer(fileCliente);
+      fileReaderClient.onload = (e) => {
+          arrayBuffer = fileReaderClient.result;
+          var data = new Uint8Array(arrayBuffer);
+          var arr = new Array();
+          for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+          var bstr = arr.join("");
+          var workbook = XLSX.read(bstr, {type:"binary"});
+          var first_sheet_name = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[first_sheet_name];
+
+          let rowsClient = XLSX.utils.sheet_to_json(worksheet, {
+            raw: true, // Use raw values (true) or formatted strings (false)
+            header: 1, // Generate an array of arrays ("2D Array")
+          });
+
+          for (let index = 0; index < rowsClient.length; index++) {
+
+            if(index == 0){
+                continue;
+            } else {
+              this.itensClient.push({
+                "refer": rowsClient[index][this.posCodBarraClientNumber] ? rowsClient[index][this.posCodBarraClientNumber].replace(/\s+/g,"") : null,
+                "quantity": rowsClient[index][this.posQuantidadeClientNumber],
+                "description": this.posDescricaoClientNumber != null ? rowsClient[index][this.posDescricaoClientNumber] : null,
+                "internalCode": this.posNumeroClientNumber != null ? rowsClient[index][this.posNumeroClientNumber] : null,
+                "price": this.posPriceClientNumber != null ? rowsClient[index][this.posPriceClientNumber] : null,
+                "details": this.posCorClientNumber != null ? rowsClient[index][this.posCorClientNumber] : null
+              })
+            }
+          }
+
+          fileReaderBip.readAsArrayBuffer(fileBip);
+          fileReaderBip.onload = (e) => {
+              arrayBuffer = fileReaderBip.result;
+              var data = new Uint8Array(arrayBuffer);
+              var arr = new Array();
+              for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+              var bstr = arr.join("");
+              var workbook = XLSX.read(bstr, {type:"binary"});
+              var first_sheet_name = workbook.SheetNames[0];
+              var worksheet = workbook.Sheets[first_sheet_name];
+    
+              let rowsBip = XLSX.utils.sheet_to_json(worksheet, {
+                raw: true, // Use raw values (true) or formatted strings (false)
+                header: 1, // Generate an array of arrays ("2D Array")
+              });
+    
+              for (let index = 0; index < rowsBip.length; index++) {
+    
+                if(index == 0){
+                    continue;
+                } else {
+                  this.itensBip.push({
+                    "refer": rowsBip[index][this.posCodBarraBIPNumber],
+                    "section": this.posSecaoBIPNumber != null ? rowsBip[index][this.posSecaoBIPNumber] : null,
+                    "quantity": rowsBip[index][this.posQuantidadeBipadaNumber],
+                    "device": this.posMaquinaBIPNumber != null ? rowsBip[index][this.posMaquinaBIPNumber] : null
+                  })
+                }
+              }
+
+              //Terminou de rodar os dois arquivos
+
+              let payload = this.inventaryForm.value;
+              payload.employees = this.selectedEmployees;
+              payload.itensClient = this.itensClient;
+              payload.itensBip = this.itensBip;
+
+              this.inventaryService.createInventaryExcel(payload)
+                .subscribe((data) => {
+                  this.spinner.hide();
+
+                  if(!data.errors){
+                    this.toastr.success('Inventário processado com sucesso.', 'Sucesso');
+                   // this.router.navigate(['/user/list']);  
+                  } else {
+                    this.toastr.error('Erro ao processar o inventário', 'Atenção');
+                  }
+                }, err => {
+                  this.spinner.hide();
+
+                  this.toastr.error('Problema ao processar inventário. ', 'Erro: ');
+
+                });
+
+          }
+
+
+
+      }
+
+      
+
+
+
+
+      
+
+    } catch (error) {
+      this.spinner.hide();
+      this.toastr.error('Ocorreu um erro no processo, entre em contato com o administrador.', 'Atenção');
+      console.log(error);
+    }
+
   }
 
   processar() {
@@ -254,6 +470,45 @@ export class ProcvComponent implements OnInit {
       console.log(error);
     }
 
+  }
+
+  textOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return true;
+    }
+    return false;
+
+  }
+
+  text2Number(value){
+   return (value.toUpperCase().charCodeAt(0) - 65)
+  }
+
+  listClients(){
+    this.clientService.getAll() 
+    .subscribe((data) => {
+
+    this.spinner.hide();
+    this.clients = data;
+    
+    }, err => {
+      this.spinner.hide();
+      this.toastr.error('Problema ao listar clientes.' + err.error.message, 'Erro: ');
+    });
+  }
+
+  listEmployees(){
+    this.userService.getAll() 
+    .subscribe((data) => {
+
+    this.spinner.hide();
+    this.employees = data;
+    
+    }, err => {
+      this.spinner.hide();
+      this.toastr.error('Problema ao listar funcionários.' + err.error.message, 'Erro: ');
+    });
   }
 
 

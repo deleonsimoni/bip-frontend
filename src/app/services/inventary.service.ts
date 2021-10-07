@@ -14,6 +14,10 @@ export class InventaryService {
     return this.http.post<any>(`${environment.urlBIP}/inventory`, inventory);
   }
 
+  createInventaryExcel(inventory: any) {
+    return this.http.post<any>(`${environment.urlBIP}/inventory/inventoryExcel`, inventory);
+  }
+
   update(id, inventory: any) {
     return this.http.put<any>(`${environment.urlBIP}/inventory/${id}`, inventory);
   }
@@ -24,6 +28,22 @@ export class InventaryService {
 
   getAll(){
     return this.http.get<any>(`${environment.urlBIP}/inventory`);
+  }
+
+  getAllCombo(){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/getCombo`);
+  }
+
+  getInventaryExcel(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getInventary`);
+  }
+
+  carregarItensPaginated(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getItensPaginated`);
+  }
+
+  carregarLimboPaginated(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getLimboPaginated`);
   }
 
   getById(id){

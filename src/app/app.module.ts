@@ -62,6 +62,9 @@ import { NgxCurrencyModule } from 'ngx-currency';
 import { LeftPadComponent } from './views/left-pad/left-pad.component';
 import { LeftPadModule } from './views/left-pad/left-pad.module';
 import { ClipboardModule } from 'ngx-clipboard';
+import { InventaryDashboardModule } from './views/inventary-dashboard/inventary-dashboard.module';
+import { ChartModule } from 'angular-highcharts';
+import { HighchartsChartComponent } from 'highcharts-angular';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -94,12 +97,13 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     InventaryListModule,
     InventaryRegisterModule,
     ProcvModule,
+    InventaryDashboardModule,
     ModalsModule,
     NgSelectModule,
     NgxCurrencyModule,
     LeftPadModule,
     ClipboardModule,
-    
+    ChartModule,
   ],
   declarations: [
     AppComponent,
@@ -108,6 +112,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     P500Component,
     LoginComponent,
     RegisterComponent,
+    
   ],
   
   providers: [

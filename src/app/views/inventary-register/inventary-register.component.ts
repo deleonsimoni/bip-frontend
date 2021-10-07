@@ -41,7 +41,7 @@ export class InventaryRegisterComponent implements OnInit {
   toggleDisabled() {
     const car: any = this.employees[1];
     car.disabled = !car.disabled;
-}
+  }
 
 
   ngOnInit(): void {
