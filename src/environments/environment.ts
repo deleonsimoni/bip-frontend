@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  urlBIP: 'http://localhost:3000'
+  urlBIP: 'http://localhost:3000' 
 };

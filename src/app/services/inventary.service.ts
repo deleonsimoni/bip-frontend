@@ -38,12 +38,16 @@ export class InventaryService {
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getInventary`);
   }
 
-  carregarItensPaginated(id){
-    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getItensPaginated`);
+  getItensFull(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getItensFull`);
   }
 
-  carregarLimboPaginated(id){
-    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getLimboPaginated`);
+  carregarItensPaginated(id, page, size){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getItensPaginated?page=${page}&size=${size}`);
+  }
+
+  carregarLimboPaginated(id, page, size){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getLimboPaginated?page=${page}&size=${size}`);
   }
 
   getById(id){

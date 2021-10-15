@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { InventaryService } from '../../services/inventary.service';
-import { InventaryListModule } from '../inventary-list/inventary-list.module';
 import * as Highcharts from 'highcharts';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-inventary-dashboard',
@@ -30,6 +30,11 @@ export class InventaryDashboardComponent implements OnInit {
   resume;
   itenPaginated = [];
   limboPaginated = [];
+  excel = [];
+
+  currentPage = 1;
+  itemsPerPage = 10;
+  pageSize: number;
    
   highcharts = Highcharts;
   chartOptions = {   
@@ -65,6 +70,14 @@ export class InventaryDashboardComponent implements OnInit {
     },
     series: []
   };
+
+  public onPageChange(pageNum: number): void {
+    this.pageSize = this.itemsPerPage*(pageNum - 1);
+  }
+  
+  public changePagesize(num: number): void {
+    this.itemsPerPage = this.pageSize + num;
+  }
   
   findInventary(){
 
@@ -82,8 +95,8 @@ export class InventaryDashboardComponent implements OnInit {
 
     this.spinner.hide();
     this.resume = data;
-    this.carregarItensPaginated();
-    this.carregarLimboPaginated();
+    //this.carregarItensPaginated();
+    //this.carregarLimboPaginated();
 
     this.chartOptions.series = [{
         type: 'pie',
@@ -115,11 +128,11 @@ export class InventaryDashboardComponent implements OnInit {
 
     this.spinner.show();
 
-    this.inventaryService.carregarItensPaginated(this.inventaryId) 
+    this.inventaryService.carregarItensPaginated(this.inventaryId, this.currentPage , this.itemsPerPage ) 
     .subscribe((data) => {
 
     this.spinner.hide();
-    this.itenPaginated = data;
+    this.itenPaginated = data.itensClient;
     
     }, err => {
       this.spinner.hide();
@@ -128,15 +141,16 @@ export class InventaryDashboardComponent implements OnInit {
 
   }
 
+
   carregarLimboPaginated(){
 
     this.spinner.show();
 
-    this.inventaryService.carregarLimboPaginated(this.inventaryId) 
+    this.inventaryService.carregarLimboPaginated(this.inventaryId, this.currentPage , this.itemsPerPage) 
     .subscribe((data) => {
 
     this.spinner.hide();
-    this.limboPaginated = data;
+    this.limboPaginated = data.limbo;
     
     }, err => {
       this.spinner.hide();
@@ -158,6 +172,58 @@ export class InventaryDashboardComponent implements OnInit {
       this.spinner.hide();
       this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
     });
+  }
+
+
+  
+  gerarExcel(){
+    this.excel = [];
+    this.spinner.show();
+
+    this.inventaryService.getItensFull(this.inventaryId) 
+    .subscribe((data) => {
+
+    this.spinner.hide();
+    this.excel = data.itensClient;
+
+    for (let i = 0; i < this.excel.length; i++) {
+
+      if(this.excel[i].bip){
+        this.excel[i]['Quantidade Bipada'] = 0;
+        this.excel[i]['Diferença'] = 0;
+        this.excel[i]['Seção'] = " ";
+        for (let p = 0; p < this.excel[i].bip.length; p++) {
+        
+          this.excel[i]['Quantidade Bipada'] += Number(this.excel[i].bip[p].quantity);
+          this.excel[i]['Seção'] += " / " + this.excel[i].bip[p].section;
+
+        }
+
+        if(this.excel[i]['quantity'] > this.excel[i]['Quantidade Bipada']){
+          this.excel[i]['Diferença'] = this.excel[i]['quantity'] - this.excel[i]['Quantidade Bipada'];
+        } else {
+          this.excel[i]['Diferença'] = this.excel[i]['Quantidade Bipada'] - this.excel[i]['quantity'] ;
+        }
+
+      } else {
+        this.excel[i].bip = "Não encontrado"
+      }
+
+    }
+
+    this.exportAsExcelFile(this.excel);
+    
+    }, err => {
+      this.spinner.hide();
+      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
+    });
+
+  }
+
+  public exportAsExcelFile(json: any[]): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+    XLSX.writeFile(workbook, 'bip_export_' + new  Date().getTime() + '.xlsx');
   }
 
 }

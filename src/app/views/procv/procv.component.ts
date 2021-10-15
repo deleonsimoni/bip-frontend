@@ -217,7 +217,7 @@ export class ProcvComponent implements OnInit {
 
                   if(!data.errors){
                     this.toastr.success('Inventário processado com sucesso.', 'Sucesso');
-                   // this.router.navigate(['/user/list']);  
+                    this.router.navigate(['/inventary/dashboard']);  
                   } else {
                     this.toastr.error('Erro ao processar o inventário', 'Atenção');
                   }
