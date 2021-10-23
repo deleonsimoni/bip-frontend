@@ -1,143 +1,124 @@
-<div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-header">
-          <i class="fa fa-align-justify"></i> Dashboard de Inventários
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Inventários</strong>
+      <small></small>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let inventary of inventaries">
+        <div class="card-works">
+          <div class="row">
+            <div class="col-sm-7 border-right">
+              <small>Cliente</small>
+              <h4>{{inventary.client.name}}</h4>
+            </div>
+            <div class="col-sm-4 border-right">
+              <small>Data</small>
+              <h4>{{inventary.startDate | date: 'dd/MM/yyyy'}} - {{inventary.endDate | date: 'dd/MM/yyyy'}}</h4>
+            </div>
+
+            <div (click)="detailInventory(inventary._id)" style="cursor: pointer;"
+              class="col-sm-1 text-center align-self-center pointer">
+              <i class="fa fa-chevron-down"></i>
+            </div>
+          </div>
         </div>
-        <div class="card-body">
-    
-              <h5>Tem apenas o inventário em Excel? Sem problemas a gente faz o batimento pra você</h5>
-              
-              
-              
-              <div class="form-group">
-                <label for="company">Selecione o inventário</label>
-                <select id="select2" [(ngModel)]="inventaryId" name="select2" class="form-control">
-                  <option selected="true" disabled>Selecione o Cliente</option>
-                  <option *ngFor="let inventary of inventaries" [ngValue]="inventary._id">{{inventary.startDate | date: 'dd/MM/yyyy'}} - {{ inventary.endDate | date: 'dd/MM/yyyy' }} {{ inventary.client.name}}</option>
-                </select>
+
+
+          <div *ngIf="inventarySelect && findInventory == inventary._id" class="work-content">
+
+            <div class="section">
+              <h6>Detalhes</h6>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-sm-10 mb-2">
+                <strong>Comentário</strong>
+                <p>{{ inventarySelect.description ? inventarySelect.description : '-----' }}</p>
+              </div>
+              <div class="col-sm-6 mb-2">
+                <strong>Data de Criação</strong>
+                <p>{{inventarySelect.createdAt | date: 'dd/MM/yyyy' }}</p>
               </div>
 
-              <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                <button (click)="findInventary()" class="btn btn-block btn-outline-success">Ver Análise</button>
             </div>
+            <div class="section">
+              <h6>Cliente</h6>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-sm-6 mb-2">
+                <strong>Email</strong>
+                <p>{{ inventarySelect.client.email ? inventarySelect.client.email : '-----' }}</p>
+              </div>
+              <div class="col-sm-6 mb-2">
+                <strong>Telefone</strong>
+                <p>{{ inventarySelect.client.phones ? inventarySelect.client.phones.whatsapp + ' / ' +
+                  inventarySelect.client.phones.phone : '-----' }}</p>
+              </div>
 
-            <div *ngIf="resume">
-                <hr style="border: 1px solid red;">
-
-                <h1>{{resume.client.name}}, seu Relatório está pronto</h1>
-
-                <div class="form-group row">
-                   A empresa {{resume.owner.name}} disponibiliza de forma íntegra e assertiva o inventário realizado entre os dias 
-                   {{resume.startDate | date: 'dd/MM/yyyy'}} e {{resume.startDate | date: 'dd/MM/yyyy'}} com a colaboração de seus funcionários 
-                   <p *ngFor="let employee of resume.employees"> {{employee.name}},&nbsp; </p>
-                </div>
-
-                <div class="form-group row">
-                    {{resume.description}}
-                </div>
-
-                <highcharts-chart
-                    [Highcharts] = "highcharts" 
-                    [options] = "chartOptions" 
-                    style = "width: 100%; height: 400px; display: block;">
-                </highcharts-chart>
-
-                <div class="form-group row">
-                    <div class="col-12">
-                        Total de itens do cliente ->
-                        
-                           {{resume.summary.totalClient}}
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-12">
-                        Total de itens bipados ->
-                           {{resume.summary.totalBip}}
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-12">
-                        Total de itens encontrados ->
-                            {{resume.summary.totalFind}}
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-12">
-                        Total de itens fora da relação do cliente ->
-                            {{resume.summary.totalLimbo}}
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-12">
-                        <button (click)="gerarExcel()" class="btn btn-block btn-outline-success">Gerar Excel</button>
-
-                    </div>
-                </div>
-
-                <!--
-                <div class="form-group row">
-                    <div class="col-12">
-                      
-                        <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-                            <thead>
-                              <tr>
-                                <th class="th-sm">Código
-                          
-                                </th>
-                                <th class="th-sm">Quantidade
-                          
-                                </th>
-                                <th class="th-sm">Descrição
-                          
-                                </th>
-                                <th class="th-sm">Código Interno
-                          
-                                </th>
-                                <th class="th-sm">Especificação
-                          
-                                </th>
-                                <th class="th-sm">Detalhes
-                          
-                                </th>
-                                <th class="th-sm">BIP
-                          
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let item of itemsPaginated  | slice: pageSize | slice: 0:itemsPerPage">
-                                <td>{{item.refer}}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.description}}</td>
-                                <td>{{item.internalCode}}</td>
-                                <td>{{item.price}}</td>
-                                <td>{{item.details}}</td>
-                                <td *ngFor="let bip of item.bip">{{bip.section}} - {{bip.quantity}} /</td>
-                              </tr>
-                              
-                            </tbody>
-                            <tfoot>
-                               
-                            </tfoot>
-                          </table>
-
-                          <ngb-pagination [collectionSize]="resume.summary.totalClient" #numPages [pageSize]="itemsPerPage" [(page)]="currentPage" (pageChange)="onPageChange(currentPage)"></ngb-pagination>
-
-
-                    </div>
-                </div>-->
-
+            </div>
+            <div class="section">
+              <h6>Funcionários</h6>
+            </div>
+            <div *ngFor="let employee of inventarySelect.employees" class="row align-items-center">
+              <div class="col-12">
+                <strong>Nome</strong>
+                <p>{{ employee.name }}</p>
+              </div>
+              <div class="col-12">
+                <strong>email </strong>
+                <p>{{ employee.email }}</p>
+              </div>
+              <div class="col-6">
+                <strong>CPF</strong>
+                <p>{{ employee.cpf ? employee.cpf : '-----' }}</p>
+              </div>
+              <div class="col-6">
+                <strong>Telefone</strong>
+                <p>{{ employee.phones ? employee.phones.whatsapp + ' / ' + employee.phones.phone : '-----' }}</p>
+              </div>
 
 
             </div>
 
-        </div>
+            <div class="section">
+              <h6>Resultado</h6>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-sm-6">
+                <strong>Total de Itens do Cliente</strong>
+                <p>{{ inventarySelect.totalClient ? inventarySelect.totalClient : '----' }}
+                </p>
+              </div>
+              <div class="col-sm-6">
+                <strong>Total de Itens Bipados</strong>
+                <p>{{ inventarySelect.totalBip ? inventarySelect.totalClient : '----' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="section">
+              <h6>Seções</h6>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-sm-6">
+                <strong>Seção</strong>
+                <p>aaa
+                </p>
+              </div>
+              <div class="col-sm-6">
+                <strong>Quantidade</strong>
+                <p>aaa
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
       </div>
     </div>
-    <!--/.col-->
   </div>
+</div>

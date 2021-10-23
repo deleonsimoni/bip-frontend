@@ -30,9 +30,15 @@ export class InventaryService {
     return this.http.get<any>(`${environment.urlBIP}/inventory`);
   }
 
+  detailInventory(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/detailInventory/${id}`);
+  }
+
   getAllCombo(){
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/getCombo`);
   }
+
+ 
 
   getInventaryExcel(id){
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getInventary`);

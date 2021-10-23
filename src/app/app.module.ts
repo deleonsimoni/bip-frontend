@@ -52,7 +52,6 @@ import { UserRegisterModule } from './views/user-register/user-register.module';
 import { UserListModule } from './views/user-list/user-list.module';
 import { ClientListModule } from './views/client-list/client-list.module';
 import { ClientRegisterModule } from './views/client-register/client-register.module';
-import { InventaryListModule } from './views/inventary-list/inventary-list.module';
 import { ProcvModule } from './views/procv/procv.module';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ModalsModule } from './modals/modals.module';
@@ -66,6 +65,7 @@ import { InventaryDashboardModule } from './views/inventary-dashboard/inventary-
 import { ChartModule } from 'angular-highcharts';
 import { HighchartsChartComponent, HighchartsChartModule } from 'highcharts-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CompararArquivosDashboardModule } from './views/comparar-arquivos-dashboard/comparar-arquivos-dashboard.module';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -95,10 +95,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     UserListModule,
     ClientListModule,
     ClientRegisterModule,
-    InventaryListModule,
     InventaryRegisterModule,
     ProcvModule,
     InventaryDashboardModule,
+    CompararArquivosDashboardModule,
     ModalsModule,
     NgSelectModule,
     NgxCurrencyModule,
@@ -106,7 +106,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ClipboardModule,
     ChartModule,
     HighchartsChartModule,
-    InventaryDashboardModule,
     NgbModule,
   ],
   declarations: [
