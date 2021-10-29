@@ -6,113 +6,217 @@
     </div>
     <div class="card-body">
       <div *ngFor="let inventary of inventaries">
-        <div class="card-works">
+        <div style="cursor: pointer;" (click)="detailInventory(inventary)" class="card-works">
           <div class="row">
             <div class="col-sm-7 border-right">
               <small>Cliente</small>
-              <h4>{{inventary.client.name}}</h4>
+              <h4 style="cursor: auto;">{{inventary.client.name}}</h4>
             </div>
             <div class="col-sm-4 border-right">
               <small>Data</small>
-              <h4>{{inventary.startDate | date: 'dd/MM/yyyy'}} - {{inventary.endDate | date: 'dd/MM/yyyy'}}</h4>
+              <h4 style="cursor: auto;">{{inventary.startDate | date: 'dd/MM/yyyy' : '+03:00' }} - {{inventary.endDate | date:
+                'dd/MM/yyyy' : '+03:00'}}</h4>
             </div>
 
-            <div (click)="detailInventory(inventary._id)" style="cursor: pointer;"
-              class="col-sm-1 text-center align-self-center pointer">
-              <i class="fa fa-chevron-down"></i>
+            <div class="col-sm-1 text-center align-self-center pointer">
+              <i *ngIf="findInventory == inventary._id" class="fa fa-chevron-up"></i>
+              <i *ngIf="findInventory != inventary._id" class="fa fa-chevron-down"></i>
             </div>
           </div>
         </div>
 
 
-          <div *ngIf="inventarySelect && findInventory == inventary._id" class="work-content">
+        <div *ngIf="inventarySelect && findInventory == inventary._id" class="work-content">
 
-            <div class="section">
-              <h6>Detalhes</h6>
-            </div>
-            <div class="row align-items-center">
-              <div class="col-sm-10 mb-2">
-                <strong>Comentário</strong>
-                <p>{{ inventarySelect.description ? inventarySelect.description : '-----' }}</p>
-              </div>
-              <div class="col-sm-6 mb-2">
-                <strong>Data de Criação</strong>
-                <p>{{inventarySelect.createdAt | date: 'dd/MM/yyyy' }}</p>
-              </div>
-
-            </div>
-            <div class="section">
-              <h6>Cliente</h6>
-            </div>
-            <div class="row align-items-center">
-              <div class="col-sm-6 mb-2">
-                <strong>Email</strong>
-                <p>{{ inventarySelect.client.email ? inventarySelect.client.email : '-----' }}</p>
-              </div>
-              <div class="col-sm-6 mb-2">
-                <strong>Telefone</strong>
-                <p>{{ inventarySelect.client.phones ? inventarySelect.client.phones.whatsapp + ' / ' +
-                  inventarySelect.client.phones.phone : '-----' }}</p>
+          <div class="animated fadeIn">
+            <div style="cursor: pointer;" class="card">
+              <div (click)="isCollapsedDetails = !isCollapsedDetails" class="card-header">
+                
+                <div class="section">
+                  <h6>Detalhes</h6>
+                </div>
+                <div class="card-header-actions">
+                  Clique para expandir
+                  <i *ngIf="!isCollapsedDetails" class="fa fa-chevron-up"></i>
+                  <i *ngIf="isCollapsedDetails" class="fa fa-chevron-down"></i>
+                </div>
               </div>
 
-            </div>
-            <div class="section">
-              <h6>Funcionários</h6>
-            </div>
-            <div *ngFor="let employee of inventarySelect.employees" class="row align-items-center">
-              <div class="col-12">
-                <strong>Nome</strong>
-                <p>{{ employee.name }}</p>
-              </div>
-              <div class="col-12">
-                <strong>email </strong>
-                <p>{{ employee.email }}</p>
-              </div>
-              <div class="col-6">
-                <strong>CPF</strong>
-                <p>{{ employee.cpf ? employee.cpf : '-----' }}</p>
-              </div>
-              <div class="col-6">
-                <strong>Telefone</strong>
-                <p>{{ employee.phones ? employee.phones.whatsapp + ' / ' + employee.phones.phone : '-----' }}</p>
-              </div>
+              <div style="cursor: auto;" class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                [collapse]="isCollapsedDetails">
+                <div class="row align-items-center">
+                  <div class="col-sm-10 mb-2">
+                    <strong>Comentário</strong>
+                    <p>{{ inventarySelect.description ? inventarySelect.description : '-----' }}</p>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <strong>Data de Criação</strong>
+                    <p>{{inventarySelect.createdAt | date: 'dd/MM/yyyy' }}</p>
+                  </div>
 
+                </div>
+                <div class="section">
+                  <h6>Cliente</h6>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-sm-6 mb-2">
+                    <strong>Email</strong>
+                    <p>{{ inventarySelect.client.email ? inventarySelect.client.email : '-----' }}</p>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <strong>Telefone</strong>
+                    <p>{{ inventarySelect.client.phones ? inventarySelect.client.phones.whatsapp + ' / ' +
+                      inventarySelect.client.phones.phone : '-----' }}</p>
+                  </div>
+                </div>
 
-            </div>
+                <div class="section">
+                  <h6>Funcionários</h6>
+                </div>
+                <div *ngFor="let employee of inventarySelect.employees" class="row align-items-center">
+                  <div class="col-12">
+                    <strong>Nome</strong>
+                    <p>{{ employee.name }}</p>
+                  </div>
+                  <div class="col-12">
+                    <strong>email </strong>
+                    <p>{{ employee.email }}</p>
+                  </div>
+                  <div class="col-6">
+                    <strong>CPF</strong>
+                    <p>{{ employee.cpf ? employee.cpf : '-----' }}</p>
+                  </div>
+                  <div class="col-6">
+                    <strong>Telefone</strong>
+                    <p>{{ employee.phones ? employee.phones.whatsapp + ' / ' + employee.phones.phone : '-----' }}</p>
+                  </div>
 
-            <div class="section">
-              <h6>Resultado</h6>
-            </div>
-            <div class="row align-items-center">
-              <div class="col-sm-6">
-                <strong>Total de Itens do Cliente</strong>
-                <p>{{ inventarySelect.totalClient ? inventarySelect.totalClient : '----' }}
-                </p>
-              </div>
-              <div class="col-sm-6">
-                <strong>Total de Itens Bipados</strong>
-                <p>{{ inventarySelect.totalBip ? inventarySelect.totalClient : '----' }}
-                </p>
-              </div>
-            </div>
+                </div>
 
-            <div class="section">
-              <h6>Seções</h6>
-            </div>
-            <div class="row align-items-center">
-              <div class="col-sm-6">
-                <strong>Seção</strong>
-                <p>aaa
-                </p>
               </div>
-              <div class="col-sm-6">
-                <strong>Quantidade</strong>
-                <p>aaa
-                </p>
-              </div>
-            </div>
+              <div class="card-footer">
 
+              </div>
+            </div>
           </div>
+
+
+
+
+          <div class="animated fadeIn">
+            <div style="cursor: pointer;" class="card">
+              <div (click)="isCollapsedResult = !isCollapsedResult" class="card-header">
+                <div class="section">
+                  <h6>Resultados</h6>
+                </div>
+                <div class="card-header-actions">
+                  Clique para expandir
+                  <i *ngIf="!isCollapsedResult" class="fa fa-chevron-up"></i>
+                  <i *ngIf="isCollapsedResult" class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+
+              <div style="cursor: auto;" class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                [collapse]="isCollapsedResult">
+
+                <div class="row align-items-center">
+
+                  <div class="col-sm-6">
+                    <strong>Total de Itens do Cliente</strong>
+                    <p>{{ inventarySelect.totalClient ? (inventarySelect.totalClient | number) : '----' }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6">
+                    <strong>Total de Itens Bipados</strong>
+                    <p>{{ inventarySelect.totalBip ? (inventarySelect.totalBip | number) : '----' }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h6>Seções
+                    <button title="Atualizar" type="button" (click)="getSecao(inventarySelect._id)"
+                      class="btn btn-info"><i class="fa fa-refresh"></i>&nbsp;</button>
+                  </h6>
+                </div>
+
+                <div *ngIf="secoes.length > 0">
+                  <div class="row align-items-center">
+                    <div class="col-sm-6">
+                      <strong>Seção</strong>
+                    </div>
+                    <div class="col-sm-6">
+                      <strong>Quantidade</strong>
+                    </div>
+                  </div>
+
+                  <div *ngFor="let secao of secoes" class="row align-items-center">
+                    <div class="col-sm-6">
+                      <a>{{secao.section}}</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a>{{secao.count}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+
+              </div>
+
+            </div>
+          </div>
+
+
+          <div class="animated fadeIn">
+            <div style="cursor: pointer;" class="card">
+              <div (click)="isCollapsedExport = !isCollapsedExport" class="card-header">
+                <div class="section">
+                  <h6>Exportar</h6>
+                </div>
+                <div class="card-header-actions">
+                  Clique para expandir
+                  <i *ngIf="!isCollapsedExport" class="fa fa-chevron-up"></i>
+                  <i *ngIf="isCollapsedExport" class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+              <div style="cursor: auto;" class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                [collapse]="isCollapsedExport">
+
+
+                <div class="form-group">
+                  <label for="company">Selecione o formato</label>
+                  <select id="select2" [(ngModel)]="formatExport" name="select2" class="form-control">
+                    <option value="1" selected="true">Codigo,quantidade Ex: 0123456789,15</option>
+                    <option value="2">Codigo 15 posições Quantidade 6 posições Ex: 0003456789123  000012</option>
+                    <option value="3">Codigo Ex: 0123456789</option>
+
+                  </select>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                  <button (click)="exportInventory(inventarySelect._id)" class="btn btn-block btn-outline-success">Exportar</button>
+              </div>
+
+
+              </div>
+              <div class="card-footer">
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
 
 
 

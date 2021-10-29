@@ -80,7 +80,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Comparar Excel',
-    url: '',
+    url: '/procv',
     icon: 'cil-spreadsheet',
     children: [
       {

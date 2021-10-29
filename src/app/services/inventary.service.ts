@@ -34,6 +34,15 @@ export class InventaryService {
     return this.http.get<any>(`${environment.urlBIP}/inventory/detailInventory/${id}`);
   }
 
+  getSection(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/secoes/${id}`);
+  }
+
+  exportInventory(idFormato, id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/export/${id}/${idFormato}`);
+  }
+
+
   getAllCombo(){
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/getCombo`);
   }
