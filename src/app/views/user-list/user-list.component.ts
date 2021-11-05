@@ -49,7 +49,8 @@ export class UserListComponent implements OnInit {
 
   openModalDelete(employee){
 
-    console.log('Employee information '+employee._id);
+    this.spinner.show();
+    
     this.inventaryService.getEmployeeById(employee._id).subscribe((data) => {
         if (data == 0){
           this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do funcionário ${employee.name}` }});
