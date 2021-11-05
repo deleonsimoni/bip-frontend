@@ -53,7 +53,6 @@ export class ClientListComponent implements OnInit {
   openModalDelete(client){
     
     this.spinner.show();
-
     this.inventaryService.getCompanyById(client._id).subscribe((data) => {
         if (data == 0){
           this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do cliente ${client.name}` }});
