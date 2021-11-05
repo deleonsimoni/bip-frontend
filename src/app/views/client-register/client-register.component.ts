@@ -24,7 +24,7 @@ export class ClientRegisterComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private utilService: UtilService,
-    private clientService: ClientService
+      private clientService: ClientService
   ) {
     this.isUpdate = this.router.getCurrentNavigation().extras.state;
 
@@ -42,7 +42,7 @@ export class ClientRegisterComponent implements OnInit {
       email: ['', [
         Validators.required,
         Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
-      document: [''],
+      document: ['', CustomValidator.isValidCpfCnpj],
       userTypeAccess:[''],
       complementAddress: [''],
       phones: this.fb.group({

@@ -69,6 +69,16 @@ export class InventaryService {
     return this.http.get<any>(`${environment.urlBIP}/inventory/${id}`);
   }
 
+  getEmployeeById(id){
+    console.log("Employees Information "+id);
+    return this.http.get<any>(`${environment.urlBIP}/inventory/idEmployee/${id}`);
+  }
+
+  getCompanyById(id){
+    console.log("Company Information "+id);
+    return this.http.get<any>(`${environment.urlBIP}/inventory/idCompany/${id}`);
+  }
+
   getAllHeadQuarters(){
     return this.http.get<any>(`${environment.urlBIP}/inventory/hqs`);
   }

@@ -43,7 +43,10 @@
                   <div class="form-group col-sm-6">
                       <label for="vat">CPF/CNPJ <span></span>
                       </label> 
-                      <input  placeholder="Número" class="form-control" formControlName="document" name="cpf" mask="CPF_CNPJ">
+                      <input  [class.is-invalid]="clientForm.get('document').invalid && clientForm.get('document').touched" placeholder="Número" class="form-control" formControlName="document" name="cpf" mask="CPF_CNPJ">
+                      <div class="invalid-feedback">
+                        Digite um CPF/CNPJ válido.
+                    </div>
                   </div>
                   <div class="form-group col-sm-6">
                       <label for="vat">Email Responsável<span></span>
