@@ -5,12 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { DefaultLayoutComponent } from './containers';
 import { ClientListComponent } from './views/client-list/client-list.component';
 import { ClientRegisterComponent } from './views/client-register/client-register.component';
+import { CompararArquivosDashboardComponent } from './views/comparar-arquivos-dashboard/comparar-arquivos-dashboard.component';
 
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { HomeComponent } from './views/home/home.component';
 import { InventaryDashboardComponent } from './views/inventary-dashboard/inventary-dashboard.component';
-import { InventaryListComponent } from './views/inventary-list/inventary-list.component';
 import { InventaryRegisterComponent } from './views/inventary-register/inventary-register.component';
 import { LeftPadComponent } from './views/left-pad/left-pad.component';
 import { LoginComponent } from './views/login/login.component';
@@ -112,19 +112,20 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'procv/dashboard',
+        component: CompararArquivosDashboardComponent,
+        data: {
+          title: 'Resultados Excel'
+        }
+      },
+      {
         path: 'leftpad',
         component: LeftPadComponent,
         data: {
           title: 'Completar com zeros'
         }
       },
-      {
-        path: 'inventary/list',
-        component: InventaryListComponent,
-        data: {
-          title: 'Listar Inventário'
-        }
-      },
+      
       {
         path: 'inventary/register',
         component: InventaryRegisterComponent,

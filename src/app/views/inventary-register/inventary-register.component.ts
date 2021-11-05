@@ -96,7 +96,7 @@ export class InventaryRegisterComponent implements OnInit {
           this.spinner.hide();
           if(!data.errors){
             this.toastr.success('Inventário atualizado com sucesso.', 'Sucesso');
-            this.router.navigate(['/inventary/list']);  
+            this.router.navigate(['/inventary/dashboard']);  
           } else {
             this.toastr.error('Erro ao atualizar o inventário', 'Atenção');
           }
@@ -113,7 +113,7 @@ export class InventaryRegisterComponent implements OnInit {
           
           if(!data.errors){
             this.toastr.success('Inventário criado com sucesso.', 'Sucesso');
-            this.router.navigate(['/inventary/list']);  
+            this.router.navigate(['/inventary/dashboard']);  
           } else {
             this.toastr.error('Erro ao registrar o inventário', 'Atenção');
           }
@@ -161,7 +161,7 @@ export class InventaryRegisterComponent implements OnInit {
   }
 
   voltar(){
-    this.router.navigate(['/inventary/list']);
+    this.router.navigate(['/inventary/dashboard']);
   }
 
 }

@@ -30,9 +30,24 @@ export class InventaryService {
     return this.http.get<any>(`${environment.urlBIP}/inventory`);
   }
 
+  detailInventory(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/detailInventory/${id}`);
+  }
+
+  getSection(id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/secoes/${id}`);
+  }
+
+  exportInventory(idFormato, id){
+    return this.http.get<any>(`${environment.urlBIP}/inventory/export/${id}/${idFormato}`);
+  }
+
+
   getAllCombo(){
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/getCombo`);
   }
+
+ 
 
   getInventaryExcel(id){
     return this.http.get<any>(`${environment.urlBIP}/inventory/inventoryExcel/${id}/getInventary`);
@@ -52,6 +67,16 @@ export class InventaryService {
 
   getById(id){
     return this.http.get<any>(`${environment.urlBIP}/inventory/${id}`);
+  }
+
+  getEmployeeById(id){
+    console.log("Employees Information "+id);
+    return this.http.get<any>(`${environment.urlBIP}/inventory/idEmployee/${id}`);
+  }
+
+  getCompanyById(id){
+    console.log("Company Information "+id);
+    return this.http.get<any>(`${environment.urlBIP}/inventory/idCompany/${id}`);
   }
 
   getAllHeadQuarters(){

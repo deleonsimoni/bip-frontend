@@ -6,6 +6,7 @@ import { ChartModule } from 'angular-highcharts';
 import { HighchartsChartComponent, HighchartsChartModule } from 'highcharts-angular';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     
   ],
   imports: [
+    CollapseModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

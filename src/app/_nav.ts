@@ -63,11 +63,6 @@ export const navItems: INavData[] = [
     icon: 'cil-barcode',
     children: [
       {
-        name: 'Listar',
-        url: '/inventary/list',
-        icon: 'cil-list-rich'
-      },
-      {
         name: 'Dashboard',
         url: '/inventary/dashboard',
         icon: 'cil-chart-pie'
@@ -84,11 +79,23 @@ export const navItems: INavData[] = [
     name: 'Serviços'
   },
   {
-    name: 'PROCV - Excel',
+    name: 'Comparar Excel',
     url: '/procv',
     icon: 'cil-spreadsheet',
-
+    children: [
+      {
+        name: 'Comparar Arquivos',
+        url: '/procv',
+        icon: 'cil-list-rich'
+      },
+      {
+        name: 'Resultados',
+        url: '/procv/dashboard',
+        icon: 'cil-chart-pie'
+      }
+    ]
   },
+ 
   {
     name: 'Completar com 0',
     url: '/leftpad',

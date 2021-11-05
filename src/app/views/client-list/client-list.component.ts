@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDeleteComponent } from '../../modals/modal-delete/modal-delete.component';
 import { ClientService } from '../../services/client.service';
+import { InventaryService} from '../../services/inventary.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -16,6 +17,7 @@ import { UserService } from '../../services/user.service';
 export class ClientListComponent implements OnInit {
 
   clients=[];
+  inventary = [];
   headQuarters=[];
 
   public modalRef: BsModalRef;
@@ -25,6 +27,7 @@ export class ClientListComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private clientService: ClientService,
+    private inventaryService: InventaryService,
     private modalService: BsModalService
 
   ) { }
@@ -48,17 +51,34 @@ export class ClientListComponent implements OnInit {
   }
 
   openModalDelete(client){
-    this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do cliente ${client.name}` }});
     
-    this.modalRef.content.onClose.subscribe(result => {
-        if(result){
-          this.delete(client._id);
-        }
-    })
+    console.log('Client information '+client._id);
+    this.inventaryService.getCompanyById(client._id).subscribe((data) => {
+        if (data == 0){
+          this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do cliente ${client.name}` }});
+          this.modalRef.content.onClose.subscribe(result => {
+            if(result){
+              this.delete(client._id);
+            }
+        })
+       }
+       else {
+          this.spinner.hide();
+          this.toastr.success('Não é possível excluir este cliente, porque ele está vinculado algum inventário ou filial.', 'Ok');
+          this.listMyClients();
+       }
+
+      }, err => {
+       this.spinner.hide();
+        this.toastr.error('Problema ao listar os Empregados.' + err.error.message, 'Erro: ');
+      });
+
+
   }
 
   delete(id){
 
+ 
     this.spinner.show();
 
     this.clientService.delete(id) 

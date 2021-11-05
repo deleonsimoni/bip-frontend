@@ -4,8 +4,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { InventaryService } from '../../services/inventary.service';
 import * as Highcharts from 'highcharts';
-import * as XLSX from 'xlsx';
-
+import { saveAs } from 'file-saver';
+import { UtilService } from '../../services/util.service';
 @Component({
   selector: 'app-inventary-dashboard',
   templateUrl: './inventary-dashboard.component.html',
@@ -13,11 +13,14 @@ import * as XLSX from 'xlsx';
 })
 export class InventaryDashboardComponent implements OnInit {
 
+
   constructor(
     protected router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private inventaryService: InventaryService,
+    private utilService: UtilService,
+
   ) { }
 
   ngOnInit(): void {
@@ -26,204 +29,174 @@ export class InventaryDashboardComponent implements OnInit {
   }
 
   inventaries;
-  inventaryId;
-  resume;
-  itenPaginated = [];
-  limboPaginated = [];
-  excel = [];
-
-  currentPage = 1;
-  itemsPerPage = 10;
-  pageSize: number;
-   
+  findInventory;
+  inventarySelect;
+  secoes = [];
+  isCollapsedDetails: boolean = true;
+  isCollapsedResult: boolean = true;
+  isCollapsedExport: boolean = true;
+  formatExport;
   highcharts = Highcharts;
-  chartOptions = {   
+  chartOptions = {
     chart: {
       type: 'pie',
       options3d: {
-          enabled: true,
-          alpha: 45,
-          beta: 0
+        enabled: true,
+        alpha: 45,
+        beta: 0
       }
     },
     title: {
-        text: "Totalizadores"
+      text: "Totalizadores"
     },
     accessibility: {
       point: {
-          valueSuffix: '%'
+        valueSuffix: '%'
       }
     },
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
     },
     plotOptions: {
       pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          depth: 35,
-          dataLabels: {
-              enabled: true,
-              format: '{point.name}'
-          }
+        allowPointSelect: true,
+        cursor: 'pointer',
+        depth: 35,
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}'
+        }
       }
     },
     series: []
   };
 
-  public onPageChange(pageNum: number): void {
-    this.pageSize = this.itemsPerPage*(pageNum - 1);
-  }
-  
-  public changePagesize(num: number): void {
-    this.itemsPerPage = this.pageSize + num;
-  }
-  
-  findInventary(){
+  expanded() {
 
-    this.spinner.show();
-    this.resume = null;
+  }
 
-    if(!this.inventaryId){
-      this.spinner.hide();
-      this.toastr.warning('Selecione um inventário para buscar.', 'Atenção');
+  collapsed() {
+
+  }
+
+  getFormattedDate(originalDate) {
+    return originalDate.toISOString().substring(0, originalDate.toISOString().length - 1);
+}
+
+  exportInventory(idInventory) {
+
+    if (!this.formatExport) {
+      this.toastr.error('Selecione um modelo', 'Erro: ');
       return;
     }
 
-    this.inventaryService.getInventaryExcel(this.inventaryId) 
-    .subscribe((data) => {
-
-    this.spinner.hide();
-    this.resume = data;
-    //this.carregarItensPaginated();
-    //this.carregarLimboPaginated();
-
-    this.chartOptions.series = [{
-        type: 'pie',
-        name: 'B.I.P',
-        data: [
-          {
-            name: 'Total de Produtos do Cliente',
-            y: this.resume.summary.totalClient,
-            sliced: true,
-            selected: true
-          },
-            ['Total de Produtos Bipados', this.resume.summary.totalBip],
-            ['Total de Produtos Encontrados', this.resume.summary.totalFind],
-            ['Total de Produtos Bipados Fora da Relação', this.resume.summary.totalLimbo]
-        ]
-    }]
-    
-    
-    }, err => {
-      this.spinner.hide();
-      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
-    });
-
-
-
-  }
-
-  carregarItensPaginated(){
-
     this.spinner.show();
+    this.inventaryService.exportInventory(this.formatExport, idInventory)
+      .subscribe((data) => {
 
-    this.inventaryService.carregarItensPaginated(this.inventaryId, this.currentPage , this.itemsPerPage ) 
-    .subscribe((data) => {
-
-    this.spinner.hide();
-    this.itenPaginated = data.itensClient;
-    
-    }, err => {
-      this.spinner.hide();
-      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
-    });
-
-  }
-
-
-  carregarLimboPaginated(){
-
-    this.spinner.show();
-
-    this.inventaryService.carregarLimboPaginated(this.inventaryId, this.currentPage , this.itemsPerPage) 
-    .subscribe((data) => {
-
-    this.spinner.hide();
-    this.limboPaginated = data.limbo;
-    
-    }, err => {
-      this.spinner.hide();
-      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
-    });
-
-  }
-
-  listInventories(){
-    this.spinner.show();
-
-    this.inventaryService.getAllCombo() 
-    .subscribe((data) => {
-
-    this.spinner.hide();
-    this.inventaries = data;
-    
-    }, err => {
-      this.spinner.hide();
-      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
-    });
-  }
-
-
-  
-  gerarExcel(){
-    this.excel = [];
-    this.spinner.show();
-
-    this.inventaryService.getItensFull(this.inventaryId) 
-    .subscribe((data) => {
-
-    this.spinner.hide();
-    this.excel = data.itensClient;
-
-    for (let i = 0; i < this.excel.length; i++) {
-
-      if(this.excel[i].bip){
-        this.excel[i]['Quantidade Bipada'] = 0;
-        this.excel[i]['Diferença'] = 0;
-        this.excel[i]['Seção'] = " ";
-        for (let p = 0; p < this.excel[i].bip.length; p++) {
-        
-          this.excel[i]['Quantidade Bipada'] += Number(this.excel[i].bip[p].quantity);
-          this.excel[i]['Seção'] += " / " + this.excel[i].bip[p].section;
-
-        }
-
-        if(this.excel[i]['quantity'] > this.excel[i]['Quantidade Bipada']){
-          this.excel[i]['Diferença'] = this.excel[i]['quantity'] - this.excel[i]['Quantidade Bipada'];
+        this.spinner.hide();
+        if (!data) {
+          this.toastr.info('Nenhum item bipado para ser exportado');
         } else {
-          this.excel[i]['Diferença'] = this.excel[i]['Quantidade Bipada'] - this.excel[i]['quantity'] ;
+          switch (Number(this.formatExport)) {
+            case 1:
+              this.downloadFileTemplate1(data, false);
+              break;
+            case 2:
+              this.downloadFileTemplate1(data, true);
+              break;
+            case 3:
+              this.downloadFileTemplate3(data);
+              break;
+
+            default:
+              break;
+          }
         }
 
-      } else {
-        this.excel[i].bip = "Não encontrado"
-      }
+      }, err => {
+        this.spinner.hide();
+        this.toastr.error('Problema ao buscar seção.' + err.error.message, 'Erro: ');
+      });
+  }
 
+  downloadFileTemplate3(data: any) {
+    let csv = data.map(row => row.bip);
+    let csvArray = csv.join('\r\n');
+    var blob = new Blob([csvArray], { type: 'text/csv' })
+    saveAs(blob, `${this.inventarySelect.clientName}.txt`);
+  }
+
+  downloadFileTemplate1(data: any, isLeftPad: boolean) {
+
+    const result = Array.from(new Set(data.map(s => s.bip)))
+    .map((lab: any) => { 
+      return {
+        bip: isLeftPad ? this.utilService.pad(lab, 15) : lab,
+        total: isLeftPad ? this.utilService.pad(data.filter(s => s.bip === lab).length, 6) : data.filter(s => s.bip === lab).length
+      }
+    })
+
+    let csv = result.map(row =>  row.bip + ',' + row.total);
+
+    let csvArray = csv.join('\r\n');
+    var blob = new Blob([csvArray], { type: 'text/csv' })
+    saveAs(blob, `${this.inventarySelect.clientName}.txt`);
+  }
+
+  getSecao(id) {
+
+    this.spinner.show();
+    this.inventaryService.getSection(id)
+      .subscribe((data) => {
+
+        this.spinner.hide();
+        this.secoes = data;
+
+      }, err => {
+        this.spinner.hide();
+        this.toastr.error('Problema ao buscar seção.' + err.error.message, 'Erro: ');
+      });
+  }
+
+  detailInventory(inventory) {
+    this.secoes = [];
+    if (this.findInventory == inventory._id) {
+      this.findInventory = '';
+      return;
+    } else {
+      this.findInventory = inventory._id;
     }
 
-    this.exportAsExcelFile(this.excel);
-    
-    }, err => {
-      this.spinner.hide();
-      this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
-    });
+    this.spinner.show();
+    this.inventaryService.detailInventory(inventory._id)
+      .subscribe((data) => {
 
+        this.spinner.hide();
+
+        this.inventarySelect = data.inventory[0];
+        this.inventarySelect.totalBip = data.totalBip;
+        this.inventarySelect.totalClient = data.totalClient;
+        this.inventarySelect.clientName = inventory.client.name;
+      }, err => {
+        this.spinner.hide();
+        this.toastr.error('Problema ao detalhar inventário.' + err.error.message, 'Erro: ');
+      });
   }
 
-  public exportAsExcelFile(json: any[]): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
-    XLSX.writeFile(workbook, 'bip_export_' + new  Date().getTime() + '.xlsx');
+  listInventories() {
+    this.spinner.show();
+
+    this.inventaryService.getAll()
+      .subscribe((data) => {
+
+        this.spinner.hide();
+        this.inventaries = data;
+
+      }, err => {
+        this.spinner.hide();
+        this.toastr.error('Problema ao listar inventários.' + err.error.message, 'Erro: ');
+      });
   }
 
 }

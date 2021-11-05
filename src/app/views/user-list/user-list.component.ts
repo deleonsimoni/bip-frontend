@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDeleteComponent } from '../../modals/modal-delete/modal-delete.component';
 import { UserService } from '../../services/user.service';
+import { InventaryService } from '../../services/inventary.service';
 
 @Component({
   selector: 'app-user-list',
@@ -22,6 +23,7 @@ export class UserListComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private userService: UserService,
+    private inventaryService: InventaryService,
     private modalService: BsModalService
 
   ) { }
@@ -46,13 +48,32 @@ export class UserListComponent implements OnInit {
   }
 
   openModalDelete(employee){
-    this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do funcionário ${employee.name}` }});
-    
-    this.modalRef.content.onClose.subscribe(result => {
-        if(result){
-          this.delete(employee._id);
-        }
-    })
+
+    console.log('Employee information '+employee._id);
+    this.inventaryService.getEmployeeById(employee._id).subscribe((data) => {
+        if (data == 0){
+          this.modalRef = this.modalService.show(ModalDeleteComponent, { initialState: { title: 'Excluir', message: `Confirma exclusão do funcionário ${employee.name}` }});
+          this.modalRef.content.onClose.subscribe(result => {
+              if(result){
+                this.delete(employee._id);
+              }
+          })
+       }
+       else {
+          this.spinner.hide();
+          this.toastr.success('Não é possível excluir este funcionário, porque ele está vinculado algum inventário.', 'Ok');
+          this.listMyEmployee();
+       }
+
+      }, err => {
+       this.spinner.hide();
+        this.toastr.error('Problema ao listar os Empregados.' + err.error.message, 'Erro: ');
+      });
+
+
+
+
+
   }
 
   delete(id){
