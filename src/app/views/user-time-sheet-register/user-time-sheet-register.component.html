@@ -1,0 +1,89 @@
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Folha de Ponto</strong>
+      <small>{{isUpdate ? 'Atualizar' : 'Cadastrar'}}</small>
+    </div>
+    <div class="card-body">
+      <form class="user" [formGroup]="userTimeSheetForm" (ngSubmit)="register()">
+
+       <div class="form-group row">
+
+          <div class="col-md-7">
+            <label for="employee">Lista de Funcionários<span></span>
+            </label> 
+           
+            <div>
+              <ng-template [ngIf]="!isNotDisabledEmployee" [ngIfElse]="isDisabledEmployee">
+                <select id="select2" formControlName="employee" name="select2" #employee  (change)="listTimeSheet($event, employee.value)" class="form-control form-control-lg">
+                  <option selected="true" disabled>Selecione</option>
+                  <option *ngFor="let employee of employees" [ngValue]="employee._id">{{employee.name}}</option>
+                </select>
+              </ng-template>
+              <ng-template #isDisabledEmployee>
+                <select id="select2" formControlName="employee" name="select2" #employee  (change)="listTimeSheet($event, employee.value)" class="form-control form-control-lg">
+                  <option selected="true" disabled>Selecione</option>
+                  <option disabled *ngFor="let employee of employees" [ngValue]="employee._id">{{employee.name}}</option>
+                </select>
+              </ng-template>
+
+            </div>
+          
+          </div>
+
+          <div class="col-md-5">
+            <label for="date">Data Atual<span></span>
+            </label> 
+            <div>
+              <!--input type="text" name = "date" [value]="currentDate | date:'dd-MM-yyyy'"-->
+              <input type="text" readonly class="form-control" placeholder="dd-MM-yyyy" formControlName="date" name="date">
+            </div>
+          </div>
+      </div>
+
+
+        <div class="row">
+          <div class="form-group col-sm-3">
+              <label for="entry">Entrada</label>
+              <ng-template [ngIf]="!isNotReadOnlyEntry" [ngIfElse]="isReadonlyEntry">
+                <input type="text" formControlName="entry" (change)="changeFindWord($event)" maxlength="1" class="form-control" id="entry" placeholder="Deverá ser digitado a letra 'X'.">
+              </ng-template>
+              <ng-template #isReadonlyEntry>
+                <input readonly type="text" formControlName="entry" (change)="changeFindWord($event)" maxlength="8" class="form-control" id="entry" placeholder="Deverá ser digitado a letra 'X'.">
+              </ng-template>
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="exit">Saída</label>
+            <ng-template [ngIf]="!isNotReadonlyExit" [ngIfElse]="isReadonlyExit">
+               <input type="text" formControlName="exit" (change)="changeFindWord($event)" maxlength="1" class="form-control" id="exit" placeholder="Deverá ser digitado a letra 'X'.">
+            </ng-template>
+            <ng-template #isReadonlyExit>
+               <input readonly type="text" formControlName="exit" (change)="changeFindWord($event)" maxlength="8" class="form-control" id="exit" placeholder="Deverá ser digitado a letra 'X'."> 
+            </ng-template>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="journey">Jornada<span></span>
+          </label> 
+          <input placeholder="Informações da jornada" class="form-control" formControlName="journey" name="journey">
+      </div>
+      <div class="form-group">
+        <label for="note">Apontamentos<span></span>
+        </label> 
+        <input placeholder="Apontamentos" class="form-control" formControlName="note" name="note">
+      </div>
+
+      <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                <button type="submit" [disabled]="!userTimeSheetForm.valid" class="btn btn-block btn-outline-success">Salvar</button>
+            </div>
+            <br/>
+            <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                <button type="button" (click)="voltar()" class="btn btn-block btn-outline-danger">Voltar</button>
+      </div>
+            
+        </form>
+
+    </div>
+  </div>
+</div><!--/.col-->

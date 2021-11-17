@@ -47,8 +47,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
-import { UserTimeSheetModule } from './views/user-time-sheet/user-time-sheet.module';
+import { UserTimeSheetListModule } from './views/user-time-sheet-list/user-time-sheet-list.module';
 import { UserRegisterModule } from './views/user-register/user-register.module';
+import { UserTimeSheetRegisterModule } from './views/user-time-sheet-register/user-time-sheet-register.module';
 import { UserListModule } from './views/user-list/user-list.module';
 import { ClientListModule } from './views/client-list/client-list.module';
 import { ClientRegisterModule } from './views/client-register/client-register.module';
@@ -90,7 +91,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    UserTimeSheetModule,
+    UserTimeSheetListModule,
+    UserTimeSheetRegisterModule,
     UserRegisterModule,
     UserListModule,
     ClientListModule,

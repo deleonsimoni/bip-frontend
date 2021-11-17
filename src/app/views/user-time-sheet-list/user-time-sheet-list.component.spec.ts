@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserTimeSheetComponent } from './user-time-sheet.component';
+import { UserTimeSheetListComponent } from './user-time-sheet-list.component';
 
-describe('UserTimeSheetComponent', () => {
-  let component: UserTimeSheetComponent;
-  let fixture: ComponentFixture<UserTimeSheetComponent>;
+describe('UserTimeSheetListComponent', () => {
+  let component: UserTimeSheetListComponent;
+  let fixture: ComponentFixture<UserTimeSheetListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserTimeSheetComponent ]
+      declarations: [ UserTimeSheetListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserTimeSheetComponent);
+    fixture = TestBed.createComponent(UserTimeSheetListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

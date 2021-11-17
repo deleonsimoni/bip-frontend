@@ -31,8 +31,20 @@ export const navItems: INavData[] = [
       },
       {
         name: 'TimeSheet',
-        url: '/user/timeSheet',
-        icon: 'cil-spreadsheet'
+        url: '/user',
+        icon: 'cil-spreadsheet',
+        children: [
+          {
+            name: 'Listar',
+            url: '/user/timeSheet/list',
+            icon: 'cil-list-rich'
+          },
+          {
+            name: 'Cadastrar',
+            url: '/user/timeSheet/register',
+            icon: 'cil-color-border'
+          }
+        ]
       }
     ]
   },

@@ -18,7 +18,8 @@ import { ProcvComponent } from './views/procv/procv.component';
 import { RegisterComponent } from './views/register/register.component';
 import { UserListComponent } from './views/user-list/user-list.component';
 import { UserRegisterComponent } from './views/user-register/user-register.component';
-import { UserTimeSheetComponent } from './views/user-time-sheet/user-time-sheet.component';
+import { UserTimeSheetListComponent } from './views/user-time-sheet-list/user-time-sheet-list.component';
+import { UserTimeSheetRegisterComponent } from './views/user-time-sheet-register/user-time-sheet-register.component';
 
 export const routes: Routes = [
   {
@@ -84,10 +85,17 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'user/timeSheet',
-        component: UserTimeSheetComponent,
+        path: 'user/timeSheet/list',
+        component: UserTimeSheetListComponent,
         data: {
-          title: 'Folha de Ponto'
+          title: 'Listar Folha de Ponto'
+        }
+      },
+      {
+        path: 'user/timeSheet/register',
+        component: UserTimeSheetRegisterComponent,
+        data: {
+          title: 'Cadastrar Folha de Ponto'
         }
       },
       {
