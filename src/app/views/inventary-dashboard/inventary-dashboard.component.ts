@@ -94,10 +94,15 @@ export class InventaryDashboardComponent implements OnInit {
     this.inventaryService.exportInventory(this.formatExport, idInventory)
       .subscribe((data) => {
 
+
         this.spinner.hide();
         if (!data) {
           this.toastr.info('Nenhum item bipado para ser exportado');
         } else {
+
+          //filtrar somente encontrados
+          data = data.filter(bip => bip.isFounded)
+
           switch (Number(this.formatExport)) {
             case 1:
               this.downloadFileTemplate1(data, false);
@@ -152,6 +157,11 @@ export class InventaryDashboardComponent implements OnInit {
 
         this.spinner.hide();
         this.secoes = data;
+
+        if(this.inventarySelect && this.inventarySelect.totalBip && this.secoes){
+          this.inventarySelect.totalBip = this.secoes.reduce((total, item) => total + item.count, 0);
+        }
+        
 
       }, err => {
         this.spinner.hide();
